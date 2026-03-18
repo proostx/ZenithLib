@@ -1,3 +1,4 @@
+```lua
 local ZenithClassic = {}
 
 local Players = game:GetService("Players")
@@ -145,7 +146,7 @@ function ZenithClassic:CreateWindow(cfg)
 	stroke(root, Color3.fromRGB(80, 80, 80), 1, 0)
 	corner(root, 2)
 
-	local outerAccent = create("Frame", {
+	create("Frame", {
 		Name = "OuterAccent",
 		Position = UDim2.fromOffset(1, 1),
 		Size = UDim2.new(1, -2, 0, 1),
@@ -173,7 +174,7 @@ function ZenithClassic:CreateWindow(cfg)
 		Parent = inner
 	})
 
-	local title = create("TextLabel", {
+	create("TextLabel", {
 		BackgroundTransparency = 1,
 		Size = UDim2.new(1, -60, 1, 0),
 		TextXAlignment = Enum.TextXAlignment.Left,
@@ -211,7 +212,7 @@ function ZenithClassic:CreateWindow(cfg)
 	corner(tabBar, 2)
 	pad(tabBar, 4, 4, 2, 2)
 
-	local tabLayout = create("UIListLayout", {
+	create("UIListLayout", {
 		FillDirection = Enum.FillDirection.Horizontal,
 		SortOrder = Enum.SortOrder.LayoutOrder,
 		Padding = UDim.new(0, 4),
@@ -454,7 +455,7 @@ function ZenithClassic:CreateWindow(cfg)
 			local groupApi = {}
 
 			function groupApi:AddLabel(text)
-				local lbl = create("TextLabel", {
+				return create("TextLabel", {
 					BackgroundTransparency = 1,
 					Size = UDim2.new(1, 0, 0, 14),
 					Text = text or "Label",
@@ -464,7 +465,6 @@ function ZenithClassic:CreateWindow(cfg)
 					TextXAlignment = Enum.TextXAlignment.Left,
 					Parent = body
 				})
-				return lbl
 			end
 
 			function groupApi:AddDivider(text)
@@ -474,7 +474,7 @@ function ZenithClassic:CreateWindow(cfg)
 					Parent = body
 				})
 
-				local line1 = create("Frame", {
+				create("Frame", {
 					Position = UDim2.new(0, 0, 0.5, 0),
 					Size = UDim2.new(0.35, 0, 0, 1),
 					BackgroundColor3 = THEME.Stroke,
@@ -482,7 +482,7 @@ function ZenithClassic:CreateWindow(cfg)
 					Parent = holder
 				})
 
-				local line2 = create("Frame", {
+				create("Frame", {
 					AnchorPoint = Vector2.new(1, 0.5),
 					Position = UDim2.new(1, 0, 0.5, 0),
 					Size = UDim2.new(0.35, 0, 0, 1),
@@ -519,15 +519,34 @@ function ZenithClassic:CreateWindow(cfg)
 				local box = create("TextButton", {
 					Position = UDim2.fromOffset(0, 1),
 					Size = UDim2.fromOffset(12, 12),
-					BackgroundColor3 = value and THEME.Accent or THEME.Control2,
+					BackgroundColor3 = THEME.Control2,
 					Text = "",
 					AutoButtonColor = false,
+					ClipsDescendants = true,
 					Parent = holder
 				})
-				stroke(box, value and THEME.Accent2 or THEME.StrokeSoft, 1, 0)
+				local boxStroke = stroke(box, THEME.StrokeSoft, 1, 0)
 				corner(box, 1)
 
-				local label = create("TextLabel", {
+				local innerFill = create("Frame", {
+					AnchorPoint = Vector2.new(0.5, 0.5),
+					Position = UDim2.fromScale(0.5, 0.5),
+					Size = UDim2.fromOffset(0, 0),
+					BackgroundColor3 = THEME.Accent,
+					BorderSizePixel = 0,
+					Parent = box
+				})
+				corner(innerFill, 1)
+
+				local flash = create("Frame", {
+					Size = UDim2.new(1, 0, 1, 0),
+					BackgroundColor3 = THEME.Accent2,
+					BackgroundTransparency = 1,
+					Parent = box
+				})
+				corner(flash, 1)
+
+				create("TextLabel", {
 					Position = UDim2.fromOffset(18, 0),
 					Size = UDim2.new(1, -18, 1, 0),
 					BackgroundTransparency = 1,
@@ -539,17 +558,39 @@ function ZenithClassic:CreateWindow(cfg)
 					Parent = holder
 				})
 
-				local function render()
-					box.BackgroundColor3 = value and THEME.Accent or THEME.Control2
-					local st = box:FindFirstChildOfClass("UIStroke")
-					if st then
-						st.Color = value and THEME.Accent2 or THEME.StrokeSoft
+				local function render(animated)
+					if value then
+						if animated then
+							box.Size = UDim2.fromOffset(10, 10)
+							tween(box, 0.08, {Size = UDim2.fromOffset(12, 12)})
+							tween(innerFill, 0.12, {Size = UDim2.fromOffset(10, 10)})
+							tween(boxStroke, 0.12, {Color = THEME.Accent2})
+							flash.BackgroundTransparency = 0.45
+							task.delay(0.03, function()
+								if flash and flash.Parent then
+									tween(flash, 0.16, {BackgroundTransparency = 1})
+								end
+							end)
+						else
+							innerFill.Size = UDim2.fromOffset(10, 10)
+							boxStroke.Color = THEME.Accent2
+						end
+					else
+						if animated then
+							box.Size = UDim2.fromOffset(10, 10)
+							tween(box, 0.08, {Size = UDim2.fromOffset(12, 12)})
+							tween(innerFill, 0.1, {Size = UDim2.fromOffset(0, 0)})
+							tween(boxStroke, 0.12, {Color = THEME.StrokeSoft})
+						else
+							innerFill.Size = UDim2.fromOffset(0, 0)
+							boxStroke.Color = THEME.StrokeSoft
+						end
 					end
 				end
 
 				box.MouseButton1Click:Connect(function()
 					value = not value
-					render()
+					render(true)
 					if opt.Callback then
 						opt.Callback(value)
 					end
@@ -557,13 +598,13 @@ function ZenithClassic:CreateWindow(cfg)
 
 				box.MouseEnter:Connect(function()
 					if not value then
-						tween(box, 0.1, {BackgroundColor3 = THEME.Control})
+						tween(box, 0.08, {BackgroundColor3 = THEME.Control})
 					end
 				end)
 
 				box.MouseLeave:Connect(function()
 					if not value then
-						tween(box, 0.1, {BackgroundColor3 = THEME.Control2})
+						tween(box, 0.08, {BackgroundColor3 = THEME.Control2})
 					end
 				end)
 
@@ -571,7 +612,7 @@ function ZenithClassic:CreateWindow(cfg)
 
 				function apiObj:Set(state)
 					value = state
-					render()
+					render(true)
 					if opt.Callback then
 						opt.Callback(value)
 					end
@@ -581,6 +622,7 @@ function ZenithClassic:CreateWindow(cfg)
 					return value
 				end
 
+				render(false)
 				return apiObj
 			end
 
@@ -613,6 +655,7 @@ function ZenithClassic:CreateWindow(cfg)
 					Size = UDim2.new(1, 0, 0, 14),
 					BackgroundColor3 = THEME.Control2,
 					BorderSizePixel = 0,
+					ClipsDescendants = true,
 					Parent = holder
 				})
 				stroke(box, THEME.StrokeSoft, 1, 0)
@@ -627,6 +670,26 @@ function ZenithClassic:CreateWindow(cfg)
 				})
 				corner(fill, 1)
 
+				local cap = create("Frame", {
+					AnchorPoint = Vector2.new(1, 0.5),
+					Position = UDim2.new(1, -1, 0.5, 0),
+					Size = UDim2.fromOffset(2, 10),
+					BackgroundColor3 = THEME.Accent2,
+					BorderSizePixel = 0,
+					Parent = fill
+				})
+				corner(cap, 1)
+
+				local capPulse = create("Frame", {
+					AnchorPoint = Vector2.new(0.5, 0.5),
+					Position = UDim2.fromScale(0.5, 0.5),
+					Size = UDim2.fromOffset(2, 10),
+					BackgroundColor3 = THEME.Accent2,
+					BackgroundTransparency = 0.35,
+					Parent = cap
+				})
+				corner(capPulse, 1)
+
 				local valueLabel = create("TextLabel", {
 					AnchorPoint = Vector2.new(0.5, 0.5),
 					Position = UDim2.fromScale(0.5, 0.5),
@@ -639,11 +702,29 @@ function ZenithClassic:CreateWindow(cfg)
 					Parent = box
 				})
 
-				local function setPercent(p)
+				local function animatePulse()
+					capPulse.Size = UDim2.fromOffset(2, 10)
+					capPulse.BackgroundTransparency = 0.35
+					tween(capPulse, 0.12, {
+						Size = UDim2.fromOffset(6, 12),
+						BackgroundTransparency = 1
+					}, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+				end
+
+				local function setPercent(p, animated)
 					p = math.clamp(p, 0, 1)
 					value = math.floor(min + (max - min) * p + 0.5)
-					fill.Size = UDim2.new(p, -2, 1, -2)
 					valueLabel.Text = string.format("%s/%s", tostring(value), tostring(max))
+
+					if animated then
+						tween(fill, 0.08, {
+							Size = UDim2.new(p, -2, 1, -2)
+						}, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
+						animatePulse()
+					else
+						fill.Size = UDim2.new(p, -2, 1, -2)
+					end
+
 					if opt.Callback then
 						opt.Callback(value)
 					end
@@ -651,7 +732,7 @@ function ZenithClassic:CreateWindow(cfg)
 
 				local function updateX(x)
 					local p = (x - box.AbsolutePosition.X) / box.AbsoluteSize.X
-					setPercent(p)
+					setPercent(p, true)
 				end
 
 				box.InputBegan:Connect(function(input)
@@ -677,13 +758,14 @@ function ZenithClassic:CreateWindow(cfg)
 
 				function apiObj:Set(v)
 					local p = (v - min) / math.max(max - min, 1)
-					setPercent(p)
+					setPercent(p, true)
 				end
 
 				function apiObj:Get()
 					return value
 				end
 
+				setPercent((value - min) / math.max(max - min, 1), false)
 				return apiObj
 			end
 
@@ -758,7 +840,7 @@ function ZenithClassic:CreateWindow(cfg)
 				corner(listFrame, 1)
 				pad(listFrame, 2, 2, 2, 2)
 
-				local listLayout = create("UIListLayout", {
+				create("UIListLayout", {
 					Padding = UDim.new(0, 2),
 					SortOrder = Enum.SortOrder.LayoutOrder,
 					Parent = listFrame
@@ -854,14 +936,76 @@ function ZenithClassic:CreateWindow(cfg)
 					TextSize = 11,
 					Font = Enum.Font.Code,
 					AutoButtonColor = false,
+					ClipsDescendants = true,
 					Parent = holder
 				})
-				stroke(button, THEME.StrokeSoft, 1, 0)
+				local buttonStroke = stroke(button, THEME.StrokeSoft, 1, 0)
 				corner(button, 1)
 
-				local function render()
+				local overlay = create("Frame", {
+					Size = UDim2.new(1, 0, 1, 0),
+					BackgroundColor3 = THEME.Accent,
+					BackgroundTransparency = 1,
+					Parent = button
+				})
+				corner(overlay, 1)
+
+				local pulse = create("Frame", {
+					AnchorPoint = Vector2.new(0.5, 0.5),
+					Position = UDim2.fromScale(0.5, 0.5),
+					Size = UDim2.new(0, 0, 1, 0),
+					BackgroundColor3 = THEME.Accent2,
+					BackgroundTransparency = 0.85,
+					Parent = button
+				})
+				corner(pulse, 1)
+
+				local function successFlash()
+					overlay.BackgroundTransparency = 0.55
+					tween(overlay, 0.16, {BackgroundTransparency = 1})
+				end
+
+				local function render(animated)
 					button.Text = listening and "..." or shortKeyName(current)
-					button.BackgroundColor3 = listening and Color3.fromRGB(42, 55, 55) or THEME.Control2
+
+					if listening then
+						if animated then
+							tween(button, 0.12, {BackgroundColor3 = Color3.fromRGB(42, 54, 54)})
+							tween(buttonStroke, 0.12, {Color = THEME.Accent2})
+						else
+							button.BackgroundColor3 = Color3.fromRGB(42, 54, 54)
+							buttonStroke.Color = THEME.Accent2
+						end
+					else
+						if animated then
+							tween(button, 0.12, {BackgroundColor3 = THEME.Control2})
+							tween(buttonStroke, 0.12, {Color = THEME.StrokeSoft})
+						else
+							button.BackgroundColor3 = THEME.Control2
+							buttonStroke.Color = THEME.StrokeSoft
+						end
+					end
+				end
+
+				local pulseThread = nil
+
+				local function startPulse()
+					if pulseThread then
+						return
+					end
+
+					pulseThread = task.spawn(function()
+						while listening and button.Parent do
+							pulse.Size = UDim2.new(0, 0, 1, 0)
+							pulse.BackgroundTransparency = 0.78
+							tween(pulse, 0.22, {
+								Size = UDim2.new(1, 0, 1, 0),
+								BackgroundTransparency = 1
+							}, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+							task.wait(0.24)
+						end
+						pulseThread = nil
+					end)
 				end
 
 				local function stop()
@@ -870,7 +1014,7 @@ function ZenithClassic:CreateWindow(cfg)
 						inputConn:Disconnect()
 						inputConn = nil
 					end
-					render()
+					render(true)
 				end
 
 				button.MouseButton1Click:Connect(function()
@@ -880,7 +1024,8 @@ function ZenithClassic:CreateWindow(cfg)
 					end
 
 					listening = true
-					render()
+					render(true)
+					startPulse()
 
 					inputConn = UserInputService.InputBegan:Connect(function(input, gp)
 						if gp then
@@ -899,6 +1044,7 @@ function ZenithClassic:CreateWindow(cfg)
 							end
 
 							stop()
+							successFlash()
 						end
 					end)
 				end)
@@ -907,7 +1053,8 @@ function ZenithClassic:CreateWindow(cfg)
 
 				function apiObj:Set(key)
 					current = key
-					render()
+					render(true)
+					successFlash()
 					if opt.Callback then
 						opt.Callback(current)
 					end
@@ -917,6 +1064,7 @@ function ZenithClassic:CreateWindow(cfg)
 					return current
 				end
 
+				render(false)
 				return apiObj
 			end
 
@@ -1037,3 +1185,4 @@ function ZenithClassic:CreateWindow(cfg)
 end
 
 return ZenithClassic
+```
