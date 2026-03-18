@@ -261,7 +261,18 @@ function ZenithClassic:CreateWindow(cfg)
 			local active = tabName == name
 			tabData.Button.BackgroundColor3 = active and THEME.TabActive or THEME.Tab
 			tabData.Button.TextColor3 = active and THEME.Text or THEME.SubText
-			tabData.Accent.Visible = active
+
+			if active then
+				tabData.Accent.Visible = true
+				tabData.Accent.Size = UDim2.new(0, 0, 0, 1)
+				tween(tabData.Accent, 0.16, {
+					Size = UDim2.new(1, -2, 0, 1)
+				}, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+			else
+				tween(tabData.Accent, 0.12, {
+					Size = UDim2.new(0, 0, 0, 1)
+				}, Enum.EasingStyle.Quad, Enum.EasingDirection.In)
+			end
 
 			if self._Pages[tabName] then
 				self._Pages[tabName].Visible = active
@@ -290,11 +301,12 @@ function ZenithClassic:CreateWindow(cfg)
 
 		local tabAccent = create("Frame", {
 			Name = "Accent",
-			Position = UDim2.new(0, 1, 1, -2),
-			Size = UDim2.new(1, -2, 0, 1),
+			AnchorPoint = Vector2.new(0.5, 1),
+			Position = UDim2.new(0.5, 0, 1, -2),
+			Size = UDim2.new(0, 0, 0, 1),
 			BackgroundColor3 = THEME.Accent,
 			BorderSizePixel = 0,
-			Visible = false,
+			Visible = true,
 			Parent = tabButton
 		})
 
