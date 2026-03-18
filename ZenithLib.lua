@@ -10,13 +10,13 @@ local LocalPlayer = Players.LocalPlayer
 local THEME = {
 	Bg = Color3.fromRGB(16, 16, 20),
 	Bg2 = Color3.fromRGB(20, 20, 26),
-	Sidebar = Color3.fromRGB(22, 22, 28),
+	Sidebar = Color3.fromRGB(21, 21, 27),
 	Topbar = Color3.fromRGB(20, 20, 26),
 	Card = Color3.fromRGB(27, 27, 34),
-	CardHover = Color3.fromRGB(32, 32, 41),
-	Section = Color3.fromRGB(34, 34, 44),
-	Stroke = Color3.fromRGB(62, 62, 76),
-	SoftStroke = Color3.fromRGB(48, 48, 60),
+	CardHover = Color3.fromRGB(31, 31, 39),
+	Section = Color3.fromRGB(33, 33, 42),
+	Stroke = Color3.fromRGB(58, 58, 72),
+	SoftStroke = Color3.fromRGB(46, 46, 58),
 	Text = Color3.fromRGB(245, 245, 252),
 	SubText = Color3.fromRGB(165, 165, 180),
 	Accent1 = Color3.fromRGB(132, 76, 255),
@@ -44,7 +44,7 @@ end
 
 local function corner(obj, radius)
 	create("UICorner", {
-		CornerRadius = UDim.new(0, radius or 12),
+		CornerRadius = UDim.new(0, radius or 10),
 		Parent = obj
 	})
 end
@@ -95,22 +95,22 @@ end
 
 local function hoverFade(button, normalBg, hoverBg, st, hoverStroke)
 	button.MouseEnter:Connect(function()
-		tween(button, TweenInfo.new(0.16, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+		tween(button, TweenInfo.new(0.14, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
 			BackgroundColor3 = hoverBg
 		})
 		if st then
-			tween(st, TweenInfo.new(0.16), {
+			tween(st, TweenInfo.new(0.14), {
 				Color = hoverStroke or THEME.Accent2
 			})
 		end
 	end)
 
 	button.MouseLeave:Connect(function()
-		tween(button, TweenInfo.new(0.16, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+		tween(button, TweenInfo.new(0.14, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
 			BackgroundColor3 = normalBg
 		})
 		if st then
-			tween(st, TweenInfo.new(0.16), {
+			tween(st, TweenInfo.new(0.14), {
 				Color = THEME.Stroke
 			})
 		end
@@ -151,8 +151,8 @@ function ZenithLib:CreateWindow(config)
 	config = config or {}
 
 	local blur = blurEffect()
-	tween(blur, TweenInfo.new(0.28, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-		Size = 18
+	tween(blur, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+		Size = 14
 	})
 
 	local gui = create("ScreenGui", {
@@ -167,80 +167,65 @@ function ZenithLib:CreateWindow(config)
 		Name = "Root",
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		Position = UDim2.fromScale(0.5, 0.5),
-		Size = UDim2.fromOffset(1010, 640),
+		Size = UDim2.fromOffset(860, 540),
 		BackgroundColor3 = THEME.Bg,
-		BackgroundTransparency = 0.14,
+		BackgroundTransparency = 0.12,
 		ClipsDescendants = true,
 		Parent = gui
 	})
-	corner(root, 20)
-	stroke(root, THEME.Stroke, 1, 0.12)
-	gradient(root, Color3.fromRGB(24, 24, 30), Color3.fromRGB(15, 15, 20), 90)
-
-	create("ImageLabel", {
-		Name = "Shadow",
-		AnchorPoint = Vector2.new(0.5, 0.5),
-		Position = UDim2.fromScale(0.5, 0.5),
-		Size = UDim2.new(1, 90, 1, 90),
-		BackgroundTransparency = 1,
-		Image = "rbxassetid://1316045217",
-		ImageColor3 = Color3.new(0, 0, 0),
-		ImageTransparency = 0.38,
-		ScaleType = Enum.ScaleType.Slice,
-		SliceCenter = Rect.new(10, 10, 118, 118),
-		ZIndex = 0,
-		Parent = root
-	})
+	corner(root, 18)
+	stroke(root, THEME.Stroke, 1, 0.14)
+	gradient(root, Color3.fromRGB(22, 22, 28), Color3.fromRGB(15, 15, 20), 90)
 
 	local sidebar = create("Frame", {
 		Name = "Sidebar",
-		Size = UDim2.fromOffset(220, 640),
+		Size = UDim2.fromOffset(190, 540),
 		BackgroundColor3 = THEME.Sidebar,
-		BackgroundTransparency = 0.08,
+		BackgroundTransparency = 0.05,
 		Parent = root
 	})
-	corner(sidebar, 20)
+	corner(sidebar, 18)
 
 	create("Frame", {
-		Position = UDim2.new(1, -20, 0, 0),
-		Size = UDim2.fromOffset(20, 640),
+		Position = UDim2.new(1, -18, 0, 0),
+		Size = UDim2.fromOffset(18, 540),
 		BackgroundColor3 = THEME.Sidebar,
 		BorderSizePixel = 0,
 		Parent = sidebar
 	})
 
 	create("TextLabel", {
-		Position = UDim2.fromOffset(18, 18),
-		Size = UDim2.new(1, -36, 0, 24),
+		Position = UDim2.fromOffset(16, 16),
+		Size = UDim2.new(1, -32, 0, 22),
 		BackgroundTransparency = 1,
 		Text = config.Title or "ZenithLib",
 		TextColor3 = THEME.Text,
-		TextSize = 20,
+		TextSize = 17,
 		Font = Enum.Font.GothamBold,
 		TextXAlignment = Enum.TextXAlignment.Left,
 		Parent = sidebar
 	})
 
 	create("TextLabel", {
-		Position = UDim2.fromOffset(18, 42),
-		Size = UDim2.new(1, -36, 0, 18),
+		Position = UDim2.fromOffset(16, 37),
+		Size = UDim2.new(1, -32, 0, 16),
 		BackgroundTransparency = 1,
-		Text = config.Subtitle or "Reference interface",
+		Text = config.Subtitle or "Premium reference interface",
 		TextColor3 = THEME.SubText,
-		TextSize = 12,
+		TextSize = 11,
 		Font = Enum.Font.Gotham,
 		TextXAlignment = Enum.TextXAlignment.Left,
 		Parent = sidebar
 	})
 
 	create("TextLabel", {
-		Position = UDim2.fromOffset(18, 80),
-		Size = UDim2.new(1, -36, 0, 18),
+		Position = UDim2.fromOffset(16, 78),
+		Size = UDim2.new(1, -32, 0, 16),
 		BackgroundTransparency = 1,
 		Text = "CATEGORIES",
 		TextColor3 = THEME.SubText,
-		TextTransparency = 0.2,
-		TextSize = 11,
+		TextTransparency = 0.15,
+		TextSize = 10,
 		Font = Enum.Font.GothamBold,
 		TextXAlignment = Enum.TextXAlignment.Left,
 		Parent = sidebar
@@ -248,14 +233,14 @@ function ZenithLib:CreateWindow(config)
 
 	local catHolder = create("Frame", {
 		Name = "CategoryHolder",
-		Position = UDim2.fromOffset(14, 106),
-		Size = UDim2.new(1, -28, 1, -210),
+		Position = UDim2.fromOffset(12, 98),
+		Size = UDim2.new(1, -24, 1, -178),
 		BackgroundTransparency = 1,
 		Parent = sidebar
 	})
 
 	create("UIListLayout", {
-		Padding = UDim.new(0, 9),
+		Padding = UDim.new(0, 8),
 		SortOrder = Enum.SortOrder.LayoutOrder,
 		Parent = catHolder
 	})
@@ -263,45 +248,45 @@ function ZenithLib:CreateWindow(config)
 	local profile = create("Frame", {
 		Name = "Profile",
 		AnchorPoint = Vector2.new(0, 1),
-		Position = UDim2.new(0, 14, 1, -14),
-		Size = UDim2.new(1, -28, 0, 82),
+		Position = UDim2.new(0, 12, 1, -12),
+		Size = UDim2.new(1, -24, 0, 70),
 		BackgroundColor3 = THEME.Bg2,
 		Parent = sidebar
 	})
-	corner(profile, 15)
-	stroke(profile, THEME.SoftStroke, 1, 0.15)
-	padding(profile, 12, 12, 12, 12)
+	corner(profile, 14)
+	stroke(profile, THEME.SoftStroke, 1, 0.18)
+	padding(profile, 10, 10, 10, 10)
 
 	local avatar = create("ImageLabel", {
 		Name = "Avatar",
-		Size = UDim2.fromOffset(48, 48),
+		Size = UDim2.fromOffset(42, 42),
 		BackgroundColor3 = THEME.Card,
 		Image = string.format("https://www.roblox.com/headshot-thumbnail/image?userId=%d&width=150&height=150&format=png", LocalPlayer.UserId),
 		Parent = profile
 	})
 	corner(avatar, 999)
-	local avatarStroke = stroke(avatar, THEME.Accent1, 1, 0.05)
+	local avatarStroke = stroke(avatar, THEME.Accent1, 1, 0.08)
 	gradient(avatarStroke, THEME.Accent1, THEME.Accent2, 35)
 
 	create("TextLabel", {
-		Position = UDim2.fromOffset(60, 8),
-		Size = UDim2.new(1, -68, 0, 18),
+		Position = UDim2.fromOffset(54, 6),
+		Size = UDim2.new(1, -60, 0, 16),
 		BackgroundTransparency = 1,
 		Text = LocalPlayer.Name,
 		TextColor3 = THEME.Text,
-		TextSize = 14,
+		TextSize = 13,
 		Font = Enum.Font.GothamBold,
 		TextXAlignment = Enum.TextXAlignment.Left,
 		Parent = profile
 	})
 
 	create("TextLabel", {
-		Position = UDim2.fromOffset(60, 29),
-		Size = UDim2.new(1, -68, 0, 16),
+		Position = UDim2.fromOffset(54, 25),
+		Size = UDim2.new(1, -60, 0, 15),
 		BackgroundTransparency = 1,
 		Text = "UID: " .. LocalPlayer.UserId,
 		TextColor3 = THEME.SubText,
-		TextSize = 12,
+		TextSize = 11,
 		Font = Enum.Font.Gotham,
 		TextXAlignment = Enum.TextXAlignment.Left,
 		Parent = profile
@@ -309,41 +294,41 @@ function ZenithLib:CreateWindow(config)
 
 	local content = create("Frame", {
 		Name = "Content",
-		Position = UDim2.fromOffset(232, 12),
-		Size = UDim2.new(1, -244, 1, -24),
+		Position = UDim2.fromOffset(202, 10),
+		Size = UDim2.new(1, -212, 1, -20),
 		BackgroundTransparency = 1,
 		Parent = root
 	})
 
 	local topbar = create("Frame", {
 		Name = "Topbar",
-		Size = UDim2.new(1, 0, 0, 48),
+		Size = UDim2.new(1, 0, 0, 42),
 		BackgroundColor3 = THEME.Topbar,
-		BackgroundTransparency = 0.15,
+		BackgroundTransparency = 0.08,
 		Parent = content
 	})
-	corner(topbar, 14)
-	stroke(topbar, THEME.SoftStroke, 1, 0.15)
+	corner(topbar, 13)
+	stroke(topbar, THEME.SoftStroke, 1, 0.18)
 
 	local pageTitle = create("TextLabel", {
-		Position = UDim2.fromOffset(16, 0),
-		Size = UDim2.new(1, -140, 1, 0),
+		Position = UDim2.fromOffset(14, 0),
+		Size = UDim2.new(1, -120, 1, 0),
 		BackgroundTransparency = 1,
 		Text = "Dashboard",
 		TextColor3 = THEME.Text,
-		TextSize = 20,
+		TextSize = 18,
 		Font = Enum.Font.GothamBold,
 		TextXAlignment = Enum.TextXAlignment.Left,
 		Parent = topbar
 	})
 
 	create("TextLabel", {
-		Position = UDim2.fromOffset(150, 0),
-		Size = UDim2.new(1, -280, 1, 0),
+		Position = UDim2.fromOffset(118, 0),
+		Size = UDim2.new(1, -220, 1, 0),
 		BackgroundTransparency = 1,
-		Text = config.TopbarHint or "Minimal animated reference layout",
+		Text = config.TopbarHint or "Loaded with loadstring",
 		TextColor3 = THEME.SubText,
-		TextSize = 12,
+		TextSize = 11,
 		Font = Enum.Font.Gotham,
 		TextXAlignment = Enum.TextXAlignment.Left,
 		Parent = topbar
@@ -351,40 +336,40 @@ function ZenithLib:CreateWindow(config)
 
 	local closeButton = create("TextButton", {
 		AnchorPoint = Vector2.new(1, 0.5),
-		Position = UDim2.new(1, -14, 0.5, 0),
-		Size = UDim2.fromOffset(28, 28),
+		Position = UDim2.new(1, -10, 0.5, 0),
+		Size = UDim2.fromOffset(26, 26),
 		BackgroundColor3 = THEME.Card,
 		Text = "×",
-		TextColor3 = THEME.Text,
-		TextSize = 18,
-		Font = Enum.Font.GothamBold,
-		AutoButtonColor = false,
-		Parent = topbar
-	})
-	corner(closeButton, 9)
-	local closeStroke = stroke(closeButton, THEME.SoftStroke, 1, 0.15)
-	hoverFade(closeButton, THEME.Card, Color3.fromRGB(48, 28, 36), closeStroke, THEME.Danger)
-
-	local minimizeButton = create("TextButton", {
-		AnchorPoint = Vector2.new(1, 0.5),
-		Position = UDim2.new(1, -48, 0.5, 0),
-		Size = UDim2.fromOffset(28, 28),
-		BackgroundColor3 = THEME.Card,
-		Text = "—",
 		TextColor3 = THEME.Text,
 		TextSize = 16,
 		Font = Enum.Font.GothamBold,
 		AutoButtonColor = false,
 		Parent = topbar
 	})
-	corner(minimizeButton, 9)
-	local minStroke = stroke(minimizeButton, THEME.SoftStroke, 1, 0.15)
+	corner(closeButton, 8)
+	local closeStroke = stroke(closeButton, THEME.SoftStroke, 1, 0.16)
+	hoverFade(closeButton, THEME.Card, Color3.fromRGB(48, 28, 36), closeStroke, THEME.Danger)
+
+	local minimizeButton = create("TextButton", {
+		AnchorPoint = Vector2.new(1, 0.5),
+		Position = UDim2.new(1, -42, 0.5, 0),
+		Size = UDim2.fromOffset(26, 26),
+		BackgroundColor3 = THEME.Card,
+		Text = "—",
+		TextColor3 = THEME.Text,
+		TextSize = 15,
+		Font = Enum.Font.GothamBold,
+		AutoButtonColor = false,
+		Parent = topbar
+	})
+	corner(minimizeButton, 8)
+	local minStroke = stroke(minimizeButton, THEME.SoftStroke, 1, 0.16)
 	hoverFade(minimizeButton, THEME.Card, THEME.Section, minStroke, THEME.Accent1)
 
 	local pageContainer = create("Frame", {
 		Name = "PageContainer",
-		Position = UDim2.fromOffset(0, 60),
-		Size = UDim2.new(1, 0, 1, -60),
+		Position = UDim2.fromOffset(0, 52),
+		Size = UDim2.new(1, 0, 1, -52),
 		BackgroundTransparency = 1,
 		Parent = content
 	})
@@ -415,17 +400,17 @@ function ZenithLib:CreateWindow(config)
 		if state then
 			gui.Enabled = true
 			root.Visible = true
-			tween(blur, TweenInfo.new(0.25), {Size = 18})
-			root.Size = UDim2.fromOffset(960, 605)
+			tween(blur, TweenInfo.new(0.22), {Size = 14})
+			root.Size = UDim2.fromOffset(820, 510)
 			root.BackgroundTransparency = 1
-			tween(root, TweenInfo.new(0.28, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
-				Size = UDim2.fromOffset(1010, 640),
-				BackgroundTransparency = 0.14
+			tween(root, TweenInfo.new(0.24, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
+				Size = UDim2.fromOffset(860, 540),
+				BackgroundTransparency = 0.12
 			})
 		else
-			tween(blur, TweenInfo.new(0.22), {Size = 0})
-			local t = tween(root, TweenInfo.new(0.22, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
-				Size = UDim2.fromOffset(960, 605),
+			tween(blur, TweenInfo.new(0.2), {Size = 0})
+			local t = tween(root, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+				Size = UDim2.fromOffset(820, 510),
 				BackgroundTransparency = 1
 			})
 			t.Completed:Connect(function()
@@ -441,13 +426,13 @@ function ZenithLib:CreateWindow(config)
 
 		if state then
 			pageContainer.Visible = false
-			tween(root, TweenInfo.new(0.24, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-				Size = UDim2.fromOffset(1010, 72)
+			tween(root, TweenInfo.new(0.22, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+				Size = UDim2.fromOffset(860, 62)
 			})
 		else
 			pageContainer.Visible = true
-			tween(root, TweenInfo.new(0.24, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-				Size = UDim2.fromOffset(1010, 640)
+			tween(root, TweenInfo.new(0.22, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+				Size = UDim2.fromOffset(860, 540)
 			})
 		end
 	end
@@ -493,8 +478,8 @@ function ZenithLib:CreateWindow(config)
 			catData.Highlight.Visible = selected
 			catData.Icon.ImageColor3 = selected and THEME.White or THEME.SubText
 			catData.Text.TextColor3 = selected and THEME.Text or THEME.SubText
-			tween(catData.Button, TweenInfo.new(0.18), {
-				BackgroundTransparency = selected and 0.05 or 0.28
+			tween(catData.Button, TweenInfo.new(0.16), {
+				BackgroundTransparency = selected and 0.04 or 0.22
 			})
 
 			if self._Pages[catName] then
@@ -509,41 +494,41 @@ function ZenithLib:CreateWindow(config)
 	function api:AddCategory(name, icon)
 		local button = create("TextButton", {
 			Name = name,
-			Size = UDim2.new(1, 0, 0, 44),
+			Size = UDim2.new(1, 0, 0, 40),
 			BackgroundColor3 = THEME.Bg2,
-			BackgroundTransparency = 0.28,
+			BackgroundTransparency = 0.22,
 			Text = "",
 			AutoButtonColor = false,
 			Parent = catHolder
 		})
-		corner(button, 12)
-		local st = stroke(button, THEME.SoftStroke, 1, 0.16)
+		corner(button, 11)
+		local st = stroke(button, THEME.SoftStroke, 1, 0.18)
 
 		local highlight = create("Frame", {
 			Name = "Highlight",
 			Size = UDim2.new(1, 0, 1, 0),
 			BackgroundColor3 = THEME.White,
-			BackgroundTransparency = 0.1,
+			BackgroundTransparency = 0.08,
 			Visible = false,
 			ZIndex = 1,
 			Parent = button
 		})
-		corner(highlight, 12)
+		corner(highlight, 11)
 		gradient(highlight, THEME.Accent1, THEME.Accent2, 0)
 
 		create("UIGradient", {
 			Color = ColorSequence.new(Color3.new(1,1,1), Color3.new(1,1,1)),
 			Transparency = NumberSequence.new({
-				NumberSequenceKeypoint.new(0, 0.15),
-				NumberSequenceKeypoint.new(1, 0.32),
+				NumberSequenceKeypoint.new(0, 0.18),
+				NumberSequenceKeypoint.new(1, 0.34),
 			}),
 			Parent = highlight
 		})
 
 		local iconLabel = create("ImageLabel", {
 			Name = "Icon",
-			Position = UDim2.fromOffset(12, 10),
-			Size = UDim2.fromOffset(24, 24),
+			Position = UDim2.fromOffset(11, 9),
+			Size = UDim2.fromOffset(22, 22),
 			BackgroundTransparency = 1,
 			Image = icon or "",
 			ImageColor3 = THEME.SubText,
@@ -553,12 +538,12 @@ function ZenithLib:CreateWindow(config)
 
 		local textLabel = create("TextLabel", {
 			Name = "Text",
-			Position = UDim2.fromOffset(46, 0),
-			Size = UDim2.new(1, -56, 1, 0),
+			Position = UDim2.fromOffset(42, 0),
+			Size = UDim2.new(1, -50, 1, 0),
 			BackgroundTransparency = 1,
 			Text = name,
 			TextColor3 = THEME.SubText,
-			TextSize = 14,
+			TextSize = 13,
 			Font = Enum.Font.GothamMedium,
 			TextXAlignment = Enum.TextXAlignment.Left,
 			ZIndex = 2,
@@ -574,7 +559,7 @@ function ZenithLib:CreateWindow(config)
 			CanvasSize = UDim2.fromOffset(0, 0),
 			AutomaticCanvasSize = Enum.AutomaticSize.Y,
 			BorderSizePixel = 0,
-			ScrollBarThickness = 4,
+			ScrollBarThickness = 3,
 			ScrollBarImageColor3 = THEME.Accent2,
 			Visible = false,
 			Parent = pagesFolder
@@ -590,7 +575,7 @@ function ZenithLib:CreateWindow(config)
 		local leftColumn = create("Frame", {
 			Name = "Left",
 			Position = UDim2.new(0, 0, 0, 0),
-			Size = UDim2.new(0.5, -7, 1, 0),
+			Size = UDim2.new(0.5, -6, 1, 0),
 			AutomaticSize = Enum.AutomaticSize.Y,
 			BackgroundTransparency = 1,
 			Parent = columns
@@ -598,28 +583,28 @@ function ZenithLib:CreateWindow(config)
 
 		local rightColumn = create("Frame", {
 			Name = "Right",
-			Position = UDim2.new(0.5, 7, 0, 0),
-			Size = UDim2.new(0.5, -7, 1, 0),
+			Position = UDim2.new(0.5, 6, 0, 0),
+			Size = UDim2.new(0.5, -6, 1, 0),
 			AutomaticSize = Enum.AutomaticSize.Y,
 			BackgroundTransparency = 1,
 			Parent = columns
 		})
 
 		local leftLayout = create("UIListLayout", {
-			Padding = UDim.new(0, 14),
+			Padding = UDim.new(0, 12),
 			SortOrder = Enum.SortOrder.LayoutOrder,
 			Parent = leftColumn
 		})
 
 		local rightLayout = create("UIListLayout", {
-			Padding = UDim.new(0, 14),
+			Padding = UDim.new(0, 12),
 			SortOrder = Enum.SortOrder.LayoutOrder,
 			Parent = rightColumn
 		})
 
 		local function refreshPageCanvas()
 			local h = math.max(leftLayout.AbsoluteContentSize.Y, rightLayout.AbsoluteContentSize.Y)
-			page.CanvasSize = UDim2.fromOffset(0, h + 6)
+			page.CanvasSize = UDim2.fromOffset(0, h + 4)
 		end
 
 		leftLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(refreshPageCanvas)
@@ -651,10 +636,10 @@ function ZenithLib:CreateWindow(config)
 
 		local function getTargetColumn(cardHeight)
 			if catApi._LeftHeight <= catApi._RightHeight then
-				catApi._LeftHeight += cardHeight + 14
+				catApi._LeftHeight += cardHeight + 12
 				return leftColumn
 			else
-				catApi._RightHeight += cardHeight + 14
+				catApi._RightHeight += cardHeight + 12
 				return rightColumn
 			end
 		end
@@ -664,26 +649,25 @@ function ZenithLib:CreateWindow(config)
 
 			local card = create("Frame", {
 				Name = moduleConfig.Name or "Module",
-				Size = UDim2.new(1, 0, 0, 170),
+				Size = UDim2.new(1, 0, 0, 150),
 				AutomaticSize = Enum.AutomaticSize.Y,
 				BackgroundColor3 = THEME.Card,
-				Parent = getTargetColumn(170)
+				ClipsDescendants = true,
+				Parent = getTargetColumn(150)
 			})
-			corner(card, 15)
-			local cardStroke = stroke(card, THEME.Stroke, 1, 0.12)
+			corner(card, 14)
+			local cardStroke = stroke(card, THEME.Stroke, 1, 0.14)
 
-			local cardGlow = create("ImageLabel", {
-				Name = "Glow",
-				AnchorPoint = Vector2.new(0.5, 0.5),
-				Position = UDim2.fromScale(0.5, 0.5),
-				Size = UDim2.new(1, 70, 1, 70),
-				BackgroundTransparency = 1,
-				Image = "rbxassetid://5028857084",
-				ImageColor3 = THEME.Accent2,
-				ImageTransparency = 0.94,
-				ZIndex = 0,
+			local cardAccent = create("Frame", {
+				Name = "Accent",
+				AnchorPoint = Vector2.new(0.5, 1),
+				Position = UDim2.new(0.5, 0, 1, 0),
+				Size = UDim2.new(1, 0, 0, 2),
+				BackgroundColor3 = THEME.Accent1,
+				BackgroundTransparency = 0.35,
 				Parent = card
 			})
+			gradient(cardAccent, THEME.Accent1, THEME.Accent2, 0)
 
 			local container = create("Frame", {
 				Name = "Container",
@@ -692,38 +676,38 @@ function ZenithLib:CreateWindow(config)
 				BackgroundTransparency = 1,
 				Parent = card
 			})
-			padding(container, 14, 14, 14, 14)
+			padding(container, 12, 12, 12, 12)
 
 			local list = create("UIListLayout", {
-				Padding = UDim.new(0, 10),
+				Padding = UDim.new(0, 9),
 				SortOrder = Enum.SortOrder.LayoutOrder,
 				Parent = container
 			})
 
 			local header = create("Frame", {
-				Size = UDim2.new(1, 0, 0, 44),
+				Size = UDim2.new(1, 0, 0, 40),
 				BackgroundTransparency = 1,
 				Parent = container
 			})
 
 			create("TextLabel", {
-				Size = UDim2.new(1, -58, 0, 20),
+				Size = UDim2.new(1, -52, 0, 18),
 				BackgroundTransparency = 1,
 				Text = moduleConfig.Name or "Module",
 				TextColor3 = THEME.Text,
-				TextSize = 16,
+				TextSize = 15,
 				Font = Enum.Font.GothamBold,
 				TextXAlignment = Enum.TextXAlignment.Left,
 				Parent = header
 			})
 
 			create("TextLabel", {
-				Position = UDim2.fromOffset(0, 22),
-				Size = UDim2.new(1, -58, 0, 18),
+				Position = UDim2.fromOffset(0, 20),
+				Size = UDim2.new(1, -52, 0, 16),
 				BackgroundTransparency = 1,
 				Text = moduleConfig.Description or "Description",
 				TextColor3 = THEME.SubText,
-				TextSize = 12,
+				TextSize = 11,
 				Font = Enum.Font.Gotham,
 				TextXAlignment = Enum.TextXAlignment.Left,
 				Parent = header
@@ -731,34 +715,23 @@ function ZenithLib:CreateWindow(config)
 
 			local mainToggle = create("TextButton", {
 				AnchorPoint = Vector2.new(1, 0.5),
-				Position = UDim2.new(1, 0, 0.5, 0),
-				Size = UDim2.fromOffset(44, 24),
+				Position = UDim2.new(1, -2, 0.5, 0),
+				Size = UDim2.fromOffset(42, 22),
 				BackgroundColor3 = Color3.fromRGB(40, 40, 48),
 				Text = "",
 				AutoButtonColor = false,
 				Parent = header
 			})
 			corner(mainToggle, 999)
-			stroke(mainToggle, THEME.SoftStroke, 1, 0.15)
+			stroke(mainToggle, THEME.SoftStroke, 1, 0.16)
 
 			local mainKnob = create("Frame", {
 				Position = UDim2.fromOffset(3, 3),
-				Size = UDim2.fromOffset(18, 18),
+				Size = UDim2.fromOffset(16, 16),
 				BackgroundColor3 = THEME.White,
 				Parent = mainToggle
 			})
 			corner(mainKnob, 999)
-
-			local mainKnobGlow = create("ImageLabel", {
-				AnchorPoint = Vector2.new(0.5, 0.5),
-				Position = UDim2.fromScale(0.5, 0.5),
-				Size = UDim2.fromOffset(34, 34),
-				BackgroundTransparency = 1,
-				Image = "rbxassetid://5028857084",
-				ImageColor3 = THEME.Accent2,
-				ImageTransparency = 1,
-				Parent = mainKnob
-			})
 
 			local moduleApi = {
 				_Enabled = false,
@@ -768,7 +741,7 @@ function ZenithLib:CreateWindow(config)
 			}
 
 			local function fit()
-				card.Size = UDim2.new(1, 0, 0, math.max(170, list.AbsoluteContentSize.Y + 28))
+				card.Size = UDim2.new(1, 0, 0, math.max(150, list.AbsoluteContentSize.Y + 24))
 				refreshPageCanvas()
 			end
 
@@ -779,17 +752,15 @@ function ZenithLib:CreateWindow(config)
 				moduleApi._Enabled = state
 
 				if state then
-					tween(mainToggle, TweenInfo.new(0.22), {BackgroundColor3 = THEME.Accent1})
-					tween(mainKnob, TweenInfo.new(0.22), {Position = UDim2.fromOffset(23, 3)})
-					tween(mainKnobGlow, TweenInfo.new(0.22), {ImageTransparency = 0.35})
-					tween(cardGlow, TweenInfo.new(0.25), {ImageTransparency = 0.83})
-					tween(cardStroke, TweenInfo.new(0.22), {Color = THEME.Accent2})
+					tween(mainToggle, TweenInfo.new(0.2), {BackgroundColor3 = THEME.Accent1})
+					tween(mainKnob, TweenInfo.new(0.2), {Position = UDim2.fromOffset(23, 3)})
+					tween(cardStroke, TweenInfo.new(0.2), {Color = THEME.Accent2})
+					tween(cardAccent, TweenInfo.new(0.2), {BackgroundTransparency = 0.05})
 				else
-					tween(mainToggle, TweenInfo.new(0.22), {BackgroundColor3 = Color3.fromRGB(40, 40, 48)})
-					tween(mainKnob, TweenInfo.new(0.22), {Position = UDim2.fromOffset(3, 3)})
-					tween(mainKnobGlow, TweenInfo.new(0.22), {ImageTransparency = 1})
-					tween(cardGlow, TweenInfo.new(0.25), {ImageTransparency = 0.94})
-					tween(cardStroke, TweenInfo.new(0.22), {Color = THEME.Stroke})
+					tween(mainToggle, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(40, 40, 48)})
+					tween(mainKnob, TweenInfo.new(0.2), {Position = UDim2.fromOffset(3, 3)})
+					tween(cardStroke, TweenInfo.new(0.2), {Color = THEME.Stroke})
+					tween(cardAccent, TweenInfo.new(0.2), {BackgroundTransparency = 0.35})
 				end
 
 				if moduleConfig.Callback then
@@ -807,11 +778,11 @@ function ZenithLib:CreateWindow(config)
 
 			function moduleApi:AddLabel(text)
 				local lbl = create("TextLabel", {
-					Size = UDim2.new(1, 0, 0, 16),
+					Size = UDim2.new(1, 0, 0, 14),
 					BackgroundTransparency = 1,
 					Text = text or "Label",
 					TextColor3 = THEME.SubText,
-					TextSize = 12,
+					TextSize = 11,
 					Font = Enum.Font.Gotham,
 					TextXAlignment = Enum.TextXAlignment.Left,
 					Parent = container
@@ -824,17 +795,17 @@ function ZenithLib:CreateWindow(config)
 				opt = opt or {}
 
 				local holder = create("Frame", {
-					Size = UDim2.new(1, 0, 0, 34),
+					Size = UDim2.new(1, 0, 0, 30),
 					BackgroundTransparency = 1,
 					Parent = container
 				})
 
 				create("TextLabel", {
-					Size = UDim2.new(1, -58, 1, 0),
+					Size = UDim2.new(1, -52, 1, 0),
 					BackgroundTransparency = 1,
 					Text = opt.Name or "Toggle",
 					TextColor3 = THEME.Text,
-					TextSize = 13,
+					TextSize = 12,
 					Font = Enum.Font.GothamMedium,
 					TextXAlignment = Enum.TextXAlignment.Left,
 					Parent = holder
@@ -843,7 +814,7 @@ function ZenithLib:CreateWindow(config)
 				local btn = create("TextButton", {
 					AnchorPoint = Vector2.new(1, 0.5),
 					Position = UDim2.new(1, 0, 0.5, 0),
-					Size = UDim2.fromOffset(40, 22),
+					Size = UDim2.fromOffset(38, 20),
 					BackgroundColor3 = Color3.fromRGB(40, 40, 48),
 					Text = "",
 					AutoButtonColor = false,
@@ -854,34 +825,21 @@ function ZenithLib:CreateWindow(config)
 
 				local dot = create("Frame", {
 					Position = UDim2.fromOffset(3, 3),
-					Size = UDim2.fromOffset(16, 16),
+					Size = UDim2.fromOffset(14, 14),
 					BackgroundColor3 = THEME.White,
 					Parent = btn
 				})
 				corner(dot, 999)
 
-				local dotGlow = create("ImageLabel", {
-					AnchorPoint = Vector2.new(0.5, 0.5),
-					Position = UDim2.fromScale(0.5, 0.5),
-					Size = UDim2.fromOffset(28, 28),
-					BackgroundTransparency = 1,
-					Image = "rbxassetid://5028857084",
-					ImageColor3 = THEME.Accent2,
-					ImageTransparency = 1,
-					Parent = dot
-				})
-
 				local state = opt.Default or false
 
 				local function render()
 					if state then
-						tween(btn, TweenInfo.new(0.2), {BackgroundColor3 = THEME.Accent1})
-						tween(dot, TweenInfo.new(0.2), {Position = UDim2.fromOffset(21, 3)})
-						tween(dotGlow, TweenInfo.new(0.2), {ImageTransparency = 0.35})
+						tween(btn, TweenInfo.new(0.18), {BackgroundColor3 = THEME.Accent1})
+						tween(dot, TweenInfo.new(0.18), {Position = UDim2.fromOffset(21, 3)})
 					else
-						tween(btn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(40, 40, 48)})
-						tween(dot, TweenInfo.new(0.2), {Position = UDim2.fromOffset(3, 3)})
-						tween(dotGlow, TweenInfo.new(0.2), {ImageTransparency = 1})
+						tween(btn, TweenInfo.new(0.18), {BackgroundColor3 = Color3.fromRGB(40, 40, 48)})
+						tween(dot, TweenInfo.new(0.18), {Position = UDim2.fromOffset(3, 3)})
 					end
 				end
 
@@ -907,17 +865,17 @@ function ZenithLib:CreateWindow(config)
 				local dragging = false
 
 				local holder = create("Frame", {
-					Size = UDim2.new(1, 0, 0, 52),
+					Size = UDim2.new(1, 0, 0, 46),
 					BackgroundTransparency = 1,
 					Parent = container
 				})
 
 				create("TextLabel", {
-					Size = UDim2.new(1, -50, 0, 18),
+					Size = UDim2.new(1, -46, 0, 16),
 					BackgroundTransparency = 1,
 					Text = opt.Name or "Slider",
 					TextColor3 = THEME.Text,
-					TextSize = 13,
+					TextSize = 12,
 					Font = Enum.Font.GothamMedium,
 					TextXAlignment = Enum.TextXAlignment.Left,
 					Parent = holder
@@ -926,19 +884,19 @@ function ZenithLib:CreateWindow(config)
 				local valueLabel = create("TextLabel", {
 					AnchorPoint = Vector2.new(1, 0),
 					Position = UDim2.new(1, 0, 0, 0),
-					Size = UDim2.fromOffset(50, 18),
+					Size = UDim2.fromOffset(46, 16),
 					BackgroundTransparency = 1,
 					Text = tostring(value),
 					TextColor3 = THEME.SubText,
-					TextSize = 12,
+					TextSize = 11,
 					Font = Enum.Font.Gotham,
 					TextXAlignment = Enum.TextXAlignment.Right,
 					Parent = holder
 				})
 
 				local bar = create("Frame", {
-					Position = UDim2.fromOffset(0, 29),
-					Size = UDim2.new(1, 0, 0, 8),
+					Position = UDim2.fromOffset(0, 25),
+					Size = UDim2.new(1, 0, 0, 7),
 					BackgroundColor3 = Color3.fromRGB(42, 42, 52),
 					Parent = holder
 				})
@@ -952,36 +910,14 @@ function ZenithLib:CreateWindow(config)
 				corner(fill, 999)
 				gradient(fill, THEME.Accent1, THEME.Accent2, 0)
 
-				create("ImageLabel", {
-					AnchorPoint = Vector2.new(0.5, 0.5),
-					Position = UDim2.fromScale(0.5, 0.5),
-					Size = UDim2.new(1, 14, 0, 18),
-					BackgroundTransparency = 1,
-					Image = "rbxassetid://5028857084",
-					ImageColor3 = THEME.Accent2,
-					ImageTransparency = 0.82,
-					Parent = fill
-				})
-
 				local knob = create("Frame", {
 					AnchorPoint = Vector2.new(0.5, 0.5),
 					Position = UDim2.new(fill.Size.X.Scale, 0, 0.5, 0),
-					Size = UDim2.fromOffset(12, 12),
+					Size = UDim2.fromOffset(11, 11),
 					BackgroundColor3 = THEME.White,
 					Parent = bar
 				})
 				corner(knob, 999)
-
-				create("ImageLabel", {
-					AnchorPoint = Vector2.new(0.5, 0.5),
-					Position = UDim2.fromScale(0.5, 0.5),
-					Size = UDim2.fromOffset(28, 28),
-					BackgroundTransparency = 1,
-					Image = "rbxassetid://5028857084",
-					ImageColor3 = THEME.Accent2,
-					ImageTransparency = 0.45,
-					Parent = knob
-				})
 
 				local function applyValueFromPercent(p)
 					p = math.clamp(p, 0, 1)
@@ -1037,22 +973,22 @@ function ZenithLib:CreateWindow(config)
 				local opened = false
 
 				local holder = create("Frame", {
-					Size = UDim2.new(1, 0, 0, 36),
+					Size = UDim2.new(1, 0, 0, 34),
 					AutomaticSize = Enum.AutomaticSize.Y,
 					BackgroundTransparency = 1,
 					Parent = container
 				})
 
 				local main = create("TextButton", {
-					Size = UDim2.new(1, 0, 0, 36),
+					Size = UDim2.new(1, 0, 0, 34),
 					BackgroundColor3 = THEME.Section,
 					Text = "",
 					AutoButtonColor = false,
 					Parent = holder
 				})
-				corner(main, 10)
+				corner(main, 9)
 				local mainStroke = stroke(main, THEME.SoftStroke, 1, 0.16)
-				padding(main, 12, 12, 0, 0)
+				padding(main, 10, 10, 0, 0)
 				hoverFade(main, THEME.Section, THEME.CardHover, mainStroke, THEME.Accent2)
 
 				local text = create("TextLabel", {
@@ -1060,7 +996,7 @@ function ZenithLib:CreateWindow(config)
 					BackgroundTransparency = 1,
 					Text = string.format("%s: %s", opt.Name or "Dropdown", tostring(selected)),
 					TextColor3 = THEME.Text,
-					TextSize = 13,
+					TextSize = 12,
 					Font = Enum.Font.GothamMedium,
 					TextXAlignment = Enum.TextXAlignment.Left,
 					Parent = main
@@ -1069,17 +1005,17 @@ function ZenithLib:CreateWindow(config)
 				local arrow = create("TextLabel", {
 					AnchorPoint = Vector2.new(1, 0.5),
 					Position = UDim2.new(1, -2, 0.5, 0),
-					Size = UDim2.fromOffset(16, 16),
+					Size = UDim2.fromOffset(14, 14),
 					BackgroundTransparency = 1,
 					Text = "▾",
 					TextColor3 = THEME.SubText,
-					TextSize = 14,
+					TextSize = 13,
 					Font = Enum.Font.GothamBold,
 					Parent = main
 				})
 
 				local drop = create("Frame", {
-					Position = UDim2.fromOffset(0, 42),
+					Position = UDim2.fromOffset(0, 39),
 					Size = UDim2.new(1, 0, 0, 0),
 					AutomaticSize = Enum.AutomaticSize.Y,
 					BackgroundColor3 = THEME.Section,
@@ -1087,28 +1023,28 @@ function ZenithLib:CreateWindow(config)
 					ClipsDescendants = true,
 					Parent = holder
 				})
-				corner(drop, 10)
+				corner(drop, 9)
 				stroke(drop, THEME.SoftStroke, 1, 0.16)
-				padding(drop, 8, 8, 8, 8)
+				padding(drop, 7, 7, 7, 7)
 
 				create("UIListLayout", {
-					Padding = UDim.new(0, 6),
+					Padding = UDim.new(0, 5),
 					SortOrder = Enum.SortOrder.LayoutOrder,
 					Parent = drop
 				})
 
 				for _, item in ipairs(items) do
 					local option = create("TextButton", {
-						Size = UDim2.new(1, 0, 0, 28),
+						Size = UDim2.new(1, 0, 0, 26),
 						BackgroundColor3 = THEME.Card,
 						Text = tostring(item),
 						TextColor3 = THEME.Text,
-						TextSize = 12,
+						TextSize = 11,
 						Font = Enum.Font.Gotham,
 						AutoButtonColor = false,
 						Parent = drop
 					})
-					corner(option, 8)
+					corner(option, 7)
 					local optStroke = stroke(option, THEME.SoftStroke, 1, 0.2)
 					hoverFade(option, THEME.Card, THEME.CardHover, optStroke, THEME.Accent2)
 
@@ -1144,17 +1080,17 @@ function ZenithLib:CreateWindow(config)
 				local listening = false
 
 				local holder = create("Frame", {
-					Size = UDim2.new(1, 0, 0, 36),
+					Size = UDim2.new(1, 0, 0, 30),
 					BackgroundTransparency = 1,
 					Parent = container
 				})
 
 				create("TextLabel", {
-					Size = UDim2.new(1, -110, 1, 0),
+					Size = UDim2.new(1, -94, 1, 0),
 					BackgroundTransparency = 1,
 					Text = opt.Name or "Keybind",
 					TextColor3 = THEME.Text,
-					TextSize = 13,
+					TextSize = 12,
 					Font = Enum.Font.GothamMedium,
 					TextXAlignment = Enum.TextXAlignment.Left,
 					Parent = holder
@@ -1163,7 +1099,7 @@ function ZenithLib:CreateWindow(config)
 				local bindButton = create("TextButton", {
 					AnchorPoint = Vector2.new(1, 0.5),
 					Position = UDim2.new(1, 0, 0.5, 0),
-					Size = UDim2.fromOffset(96, 28),
+					Size = UDim2.fromOffset(86, 28),
 					BackgroundColor3 = THEME.Section,
 					Text = "",
 					AutoButtonColor = false,
@@ -1176,21 +1112,9 @@ function ZenithLib:CreateWindow(config)
 					Size = UDim2.new(1, 0, 1, 0),
 					BackgroundTransparency = 1,
 					TextColor3 = THEME.Text,
-					TextSize = 12,
+					TextSize = 11,
 					Font = Enum.Font.GothamMedium,
 					TextXAlignment = Enum.TextXAlignment.Center,
-					Parent = bindButton
-				})
-
-				local bindGlow = create("ImageLabel", {
-					AnchorPoint = Vector2.new(0.5, 0.5),
-					Position = UDim2.fromScale(0.5, 0.5),
-					Size = UDim2.new(1, 24, 1, 24),
-					BackgroundTransparency = 1,
-					Image = "rbxassetid://5028857084",
-					ImageColor3 = THEME.Accent2,
-					ImageTransparency = 0.95,
-					ZIndex = 0,
 					Parent = bindButton
 				})
 
@@ -1198,36 +1122,28 @@ function ZenithLib:CreateWindow(config)
 					if not key then
 						return "None"
 					end
-
 					if typeof(key) == "EnumItem" then
 						return key.Name
 					end
-
 					return tostring(key)
 				end
 
 				local function render()
 					if listening then
 						bindText.Text = "..."
-						tween(bindButton, TweenInfo.new(0.18), {
+						tween(bindButton, TweenInfo.new(0.16), {
 							BackgroundColor3 = THEME.Accent1
 						})
-						tween(bindStroke, TweenInfo.new(0.18), {
+						tween(bindStroke, TweenInfo.new(0.16), {
 							Color = THEME.Accent2
-						})
-						tween(bindGlow, TweenInfo.new(0.18), {
-							ImageTransparency = 0.55
 						})
 					else
 						bindText.Text = keyToText(currentKey)
-						tween(bindButton, TweenInfo.new(0.18), {
+						tween(bindButton, TweenInfo.new(0.16), {
 							BackgroundColor3 = THEME.Section
 						})
-						tween(bindStroke, TweenInfo.new(0.18), {
+						tween(bindStroke, TweenInfo.new(0.16), {
 							Color = THEME.SoftStroke
-						})
-						tween(bindGlow, TweenInfo.new(0.18), {
-							ImageTransparency = 0.95
 						})
 					end
 				end
@@ -1307,16 +1223,16 @@ function ZenithLib:CreateWindow(config)
 				opt = opt or {}
 
 				local button = create("TextButton", {
-					Size = UDim2.new(1, 0, 0, 34),
+					Size = UDim2.new(1, 0, 0, 32),
 					BackgroundColor3 = THEME.Section,
 					Text = opt.Name or "Button",
 					TextColor3 = THEME.Text,
-					TextSize = 13,
+					TextSize = 12,
 					Font = Enum.Font.GothamMedium,
 					AutoButtonColor = false,
 					Parent = container
 				})
-				corner(button, 10)
+				corner(button, 9)
 				local buttonStroke = stroke(button, THEME.SoftStroke, 1, 0.16)
 				hoverFade(button, THEME.Section, THEME.CardHover, buttonStroke, THEME.Accent2)
 
@@ -1326,7 +1242,7 @@ function ZenithLib:CreateWindow(config)
 					})
 					task.delay(0.1, function()
 						if button and button.Parent then
-							tween(button, TweenInfo.new(0.14), {
+							tween(button, TweenInfo.new(0.12), {
 								BackgroundColor3 = THEME.Section
 							})
 						end
@@ -1345,29 +1261,29 @@ function ZenithLib:CreateWindow(config)
 				opt = opt or {}
 
 				local holder = create("Frame", {
-					Size = UDim2.new(1, 0, 0, 58),
+					Size = UDim2.new(1, 0, 0, 50),
 					BackgroundTransparency = 1,
 					Parent = container
 				})
 
 				create("TextLabel", {
-					Size = UDim2.new(1, 0, 0, 18),
+					Size = UDim2.new(1, 0, 0, 16),
 					BackgroundTransparency = 1,
 					Text = opt.Name or "Textbox",
 					TextColor3 = THEME.Text,
-					TextSize = 13,
+					TextSize = 12,
 					Font = Enum.Font.GothamMedium,
 					TextXAlignment = Enum.TextXAlignment.Left,
 					Parent = holder
 				})
 
 				local boxHolder = create("Frame", {
-					Position = UDim2.fromOffset(0, 24),
-					Size = UDim2.new(1, 0, 0, 30),
+					Position = UDim2.fromOffset(0, 20),
+					Size = UDim2.new(1, 0, 0, 28),
 					BackgroundColor3 = THEME.Section,
 					Parent = holder
 				})
-				corner(boxHolder, 10)
+				corner(boxHolder, 9)
 				local boxStroke = stroke(boxHolder, THEME.SoftStroke, 1, 0.16)
 
 				local textBox = create("TextBox", {
@@ -1377,7 +1293,7 @@ function ZenithLib:CreateWindow(config)
 					PlaceholderText = opt.Placeholder or "Enter text...",
 					TextColor3 = THEME.Text,
 					PlaceholderColor3 = THEME.SubText,
-					TextSize = 13,
+					TextSize = 12,
 					Font = Enum.Font.Gotham,
 					ClearTextOnFocus = false,
 					TextXAlignment = Enum.TextXAlignment.Left,
@@ -1386,19 +1302,19 @@ function ZenithLib:CreateWindow(config)
 				padding(textBox, 10, 10, 0, 0)
 
 				textBox.Focused:Connect(function()
-					tween(boxHolder, TweenInfo.new(0.16), {
+					tween(boxHolder, TweenInfo.new(0.14), {
 						BackgroundColor3 = THEME.CardHover
 					})
-					tween(boxStroke, TweenInfo.new(0.16), {
+					tween(boxStroke, TweenInfo.new(0.14), {
 						Color = THEME.Accent2
 					})
 				end)
 
 				textBox.FocusLost:Connect(function(enterPressed)
-					tween(boxHolder, TweenInfo.new(0.16), {
+					tween(boxHolder, TweenInfo.new(0.14), {
 						BackgroundColor3 = THEME.Section
 					})
-					tween(boxStroke, TweenInfo.new(0.16), {
+					tween(boxStroke, TweenInfo.new(0.14), {
 						Color = THEME.SoftStroke
 					})
 
@@ -1418,11 +1334,11 @@ function ZenithLib:CreateWindow(config)
 		return catApi
 	end
 
-	root.Size = UDim2.fromOffset(960, 605)
+	root.Size = UDim2.fromOffset(820, 510)
 	root.BackgroundTransparency = 1
-	tween(root, TweenInfo.new(0.32, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
-		Size = UDim2.fromOffset(1010, 640),
-		BackgroundTransparency = 0.14
+	tween(root, TweenInfo.new(0.28, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
+		Size = UDim2.fromOffset(860, 540),
+		BackgroundTransparency = 0.12
 	})
 
 	return api
