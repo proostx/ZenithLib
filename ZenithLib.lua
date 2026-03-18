@@ -61,7 +61,7 @@ function ZenithLib:CreateWindow(title, subtitle)
     SidebarCorner.CornerRadius = UDim.new(0, 10)
     SidebarCorner.Parent = Sidebar
 
-    -- Логотип (можно заменить ID)
+    -- Логотип
     local LogoFrame = Instance.new("Frame")
     LogoFrame.Size = UDim2.new(0, 45, 0, 45)
     LogoFrame.Position = UDim2.new(0, 15, 0, 18)
@@ -80,9 +80,10 @@ function ZenithLib:CreateWindow(title, subtitle)
     LogoImage.Image = "rbxassetid://79064074944871"
     LogoImage.Parent = LogoFrame
 
+    -- Заголовок в сайдбаре (увеличен отступ слева, чтобы не упиралось в край)
     local TitleLabel = Instance.new("TextLabel")
     TitleLabel.Size = UDim2.new(1, -65, 0, 22)
-    TitleLabel.Position = UDim2.new(0, 75, 0, 20)
+    TitleLabel.Position = UDim2.new(0, 80, 0, 20)  -- было 75, стало 80
     TitleLabel.BackgroundTransparency = 1
     TitleLabel.Text = title
     TitleLabel.TextColor3 = LightText
@@ -93,7 +94,7 @@ function ZenithLib:CreateWindow(title, subtitle)
 
     local SubLabel = Instance.new("TextLabel")
     SubLabel.Size = UDim2.new(1, -65, 0, 18)
-    SubLabel.Position = UDim2.new(0, 75, 0, 42)
+    SubLabel.Position = UDim2.new(0, 80, 0, 42)   -- было 75, стало 80
     SubLabel.BackgroundTransparency = 1
     SubLabel.Text = subtitle
     SubLabel.TextColor3 = GreyText
@@ -117,7 +118,7 @@ function ZenithLib:CreateWindow(title, subtitle)
     -- Контент
     local ContentArea = Instance.new("Frame")
     ContentArea.Size = UDim2.new(1, -190, 1, -20)
-    ContentArea.Position = UDim2.new(0, 190, 0, 10)
+    ContentArea.Position = UDim2.new(0, 190, 0, 15)  -- увеличено с 10 до 15 (отступ сверху)
     ContentArea.BackgroundTransparency = 1
     ContentArea.Parent = MainFrame
 
@@ -214,7 +215,7 @@ function ZenithLib:CreateWindow(title, subtitle)
     function Window:CreateLeftColumn(tab)
         local col = Instance.new("Frame")
         col.Size = UDim2.new(0.5, -15, 1, 0)
-        col.Position = UDim2.new(0, 10, 0, 35)
+        col.Position = UDim2.new(0, 10, 0, 50)  -- увеличено с 35 до 50 (отступ сверху)
         col.BackgroundTransparency = 1
         col.Parent = tab.Container
 
@@ -233,7 +234,7 @@ function ZenithLib:CreateWindow(title, subtitle)
     function Window:CreateRightColumn(tab)
         local col = Instance.new("Frame")
         col.Size = UDim2.new(0.5, -15, 1, 0)
-        col.Position = UDim2.new(0.5, 5, 0, 35)
+        col.Position = UDim2.new(0.5, 5, 0, 50)  -- увеличено с 35 до 50
         col.BackgroundTransparency = 1
         col.Parent = tab.Container
 
