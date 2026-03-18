@@ -1,4 +1,3 @@
-```lua
 local ZenithClassic = {}
 
 local Players = game:GetService("Players")
@@ -1185,4 +1184,3 @@ function ZenithClassic:CreateWindow(cfg)
 end
 
 return ZenithClassic
-```
