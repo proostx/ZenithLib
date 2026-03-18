@@ -80,10 +80,10 @@ function ZenithLib:CreateWindow(title, subtitle)
     LogoImage.Image = "rbxassetid://79064074944871"
     LogoImage.Parent = LogoFrame
 
-    -- Заголовок в сайдбаре (увеличен отступ слева, чтобы не упиралось в край)
+    -- Заголовок в сайдбаре
     local TitleLabel = Instance.new("TextLabel")
     TitleLabel.Size = UDim2.new(1, -65, 0, 22)
-    TitleLabel.Position = UDim2.new(0, 80, 0, 20)  -- было 75, стало 80
+    TitleLabel.Position = UDim2.new(0, 80, 0, 20)
     TitleLabel.BackgroundTransparency = 1
     TitleLabel.Text = title
     TitleLabel.TextColor3 = LightText
@@ -94,7 +94,7 @@ function ZenithLib:CreateWindow(title, subtitle)
 
     local SubLabel = Instance.new("TextLabel")
     SubLabel.Size = UDim2.new(1, -65, 0, 18)
-    SubLabel.Position = UDim2.new(0, 80, 0, 42)   -- было 75, стало 80
+    SubLabel.Position = UDim2.new(0, 80, 0, 42)
     SubLabel.BackgroundTransparency = 1
     SubLabel.Text = subtitle
     SubLabel.TextColor3 = GreyText
@@ -118,7 +118,7 @@ function ZenithLib:CreateWindow(title, subtitle)
     -- Контент
     local ContentArea = Instance.new("Frame")
     ContentArea.Size = UDim2.new(1, -190, 1, -20)
-    ContentArea.Position = UDim2.new(0, 190, 0, 15)  -- увеличено с 10 до 15 (отступ сверху)
+    ContentArea.Position = UDim2.new(0, 190, 0, 10)
     ContentArea.BackgroundTransparency = 1
     ContentArea.Parent = MainFrame
 
@@ -211,45 +211,69 @@ function ZenithLib:CreateWindow(title, subtitle)
         return tab
     end
 
-    -- Функции для создания левой/правой колонки (секций)
+    -- Функции для создания левой/правой колонки (секций) с прокруткой
     function Window:CreateLeftColumn(tab)
-        local col = Instance.new("Frame")
-        col.Size = UDim2.new(0.5, -15, 1, 0)
-        col.Position = UDim2.new(0, 10, 0, 50)  -- увеличено с 35 до 50 (отступ сверху)
-        col.BackgroundTransparency = 1
-        col.Parent = tab.Container
+        -- ScrollingFrame для левой колонки
+        local scroll = Instance.new("ScrollingFrame")
+        scroll.Size = UDim2.new(0.5, -15, 1, -50)  -- место под заголовок колонки
+        scroll.Position = UDim2.new(0, 10, 0, 35)   -- отступ сверху как раньше
+        scroll.BackgroundTransparency = 1
+        scroll.BorderSizePixel = 0
+        scroll.ScrollBarThickness = 6
+        scroll.ScrollBarImageColor3 = BorderColor
+        scroll.CanvasSize = UDim2.new(0, 0, 0, 0)
+        scroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
+        scroll.Parent = tab.Container
 
-        -- Добавляем UIPadding для отступов внутри карточки
+        -- Внутренний контейнер для отступов
+        local container = Instance.new("Frame")
+        container.Size = UDim2.new(1, 0, 1, 0)
+        container.BackgroundTransparency = 1
+        container.Parent = scroll
+
+        -- Отступы внутри карточки
         local padding = Instance.new("UIPadding")
         padding.PaddingTop = UDim.new(0, 10)
         padding.PaddingBottom = UDim.new(0, 10)
         padding.PaddingLeft = UDim.new(0, 15)
         padding.PaddingRight = UDim.new(0, 15)
-        padding.Parent = col
+        padding.Parent = container
 
-        tab.LeftColumn = col
-        return col
+        tab.LeftColumn = container
+        tab.LeftScroll = scroll
+        return container
     end
 
     function Window:CreateRightColumn(tab)
-        local col = Instance.new("Frame")
-        col.Size = UDim2.new(0.5, -15, 1, 0)
-        col.Position = UDim2.new(0.5, 5, 0, 50)  -- увеличено с 35 до 50
-        col.BackgroundTransparency = 1
-        col.Parent = tab.Container
+        local scroll = Instance.new("ScrollingFrame")
+        scroll.Size = UDim2.new(0.5, -15, 1, -50)
+        scroll.Position = UDim2.new(0.5, 5, 0, 35)
+        scroll.BackgroundTransparency = 1
+        scroll.BorderSizePixel = 0
+        scroll.ScrollBarThickness = 6
+        scroll.ScrollBarImageColor3 = BorderColor
+        scroll.CanvasSize = UDim2.new(0, 0, 0, 0)
+        scroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
+        scroll.Parent = tab.Container
+
+        local container = Instance.new("Frame")
+        container.Size = UDim2.new(1, 0, 1, 0)
+        container.BackgroundTransparency = 1
+        container.Parent = scroll
 
         local padding = Instance.new("UIPadding")
         padding.PaddingTop = UDim.new(0, 10)
         padding.PaddingBottom = UDim.new(0, 10)
         padding.PaddingLeft = UDim.new(0, 15)
         padding.PaddingRight = UDim.new(0, 15)
-        padding.Parent = col
+        padding.Parent = container
 
-        tab.RightColumn = col
-        return col
+        tab.RightColumn = container
+        tab.RightScroll = scroll
+        return container
     end
 
-    -- Заголовок колонки
+    -- Заголовок колонки (помещается внутрь контейнера, поэтому отступ учитывается)
     function Window:AddColumnTitle(parent, text)
         local title = Instance.new("TextLabel")
         title.Size = UDim2.new(1, 0, 0, 25)
@@ -264,6 +288,8 @@ function ZenithLib:CreateWindow(title, subtitle)
     end
 
     -- Элементы управления
+
+    -- Toggle
     function Window:CreateToggle(parent, title, default, callback)
         local y = (#parent:GetChildren() - 1) * 35 + 10
         local frame = Instance.new("Frame")
@@ -319,6 +345,7 @@ function ZenithLib:CreateWindow(title, subtitle)
         return frame
     end
 
+    -- Slider
     function Window:CreateSlider(parent, title, default, min, max, callback)
         local y = (#parent:GetChildren() - 1) * 35 + 10
         local frame = Instance.new("Frame")
@@ -342,7 +369,6 @@ function ZenithLib:CreateWindow(title, subtitle)
         label.TextXAlignment = Enum.TextXAlignment.Left
         label.Parent = frame
 
-        -- Контейнер для слайдера
         local sliderContainer = Instance.new("Frame")
         sliderContainer.Size = UDim2.new(0.7, 30, 0, 4)
         sliderContainer.Position = UDim2.new(0.3, 0, 0.5, -2)
@@ -407,6 +433,7 @@ function ZenithLib:CreateWindow(title, subtitle)
         return frame
     end
 
+    -- Keybind
     function Window:CreateKeybind(parent, title, default, callback)
         local y = (#parent:GetChildren() - 1) * 35 + 10
         local frame = Instance.new("Frame")
@@ -475,6 +502,7 @@ function ZenithLib:CreateWindow(title, subtitle)
         return frame
     end
 
+    -- Кнопка (переделана под компактный стиль, как у Keybind)
     function Window:CreateButton(parent, title, callback)
         local y = (#parent:GetChildren() - 1) * 35 + 10
         local frame = Instance.new("Frame")
@@ -487,14 +515,27 @@ function ZenithLib:CreateWindow(title, subtitle)
         corner.CornerRadius = UDim.new(0, 6)
         corner.Parent = frame
 
+        -- Метка слева (название)
+        local label = Instance.new("TextLabel")
+        label.Size = UDim2.new(0.6, -10, 1, 0)
+        label.Position = UDim2.new(0, 10, 0, 0)
+        label.BackgroundTransparency = 1
+        label.Text = title
+        label.TextColor3 = LightText
+        label.TextSize = 13
+        label.Font = Enum.Font.GothamMedium
+        label.TextXAlignment = Enum.TextXAlignment.Left
+        label.Parent = frame
+
+        -- Кнопка справа (как у Keybind)
         local btn = Instance.new("TextButton")
-        btn.Size = UDim2.new(1, -20, 1, 0)
-        btn.Position = UDim2.new(0, 10, 0, 0)
+        btn.Size = UDim2.new(0.4, -10, 0, 22)
+        btn.Position = UDim2.new(0.6, 0, 0.5, -11)
         btn.BackgroundColor3 = DarkerBg
-        btn.Text = title
+        btn.Text = "Click"
         btn.TextColor3 = LightText
-        btn.TextSize = 13
-        btn.Font = Enum.Font.GothamMedium
+        btn.TextSize = 12
+        btn.Font = Enum.Font.Gotham
         btn.Parent = frame
 
         local btnCorner = Instance.new("UICorner")
