@@ -415,29 +415,4 @@ if input.KeyCode == MenuKey then
 ```
 
 ---
-
-# Notes
-
-- This library uses a compact classic UI style.
-- Button callbacks are table-based.
-- Keybinds should always use `Enum.KeyCode`.
-- The current API is intentionally simple and strict.
-
----
-
-# Minimal Template For AI / Code Generators
-
-Use these rules when generating scripts for `ZenithLib Classic`:
-
-- Use `CreateWindow`, `AddTab`, `AddLeftGroupbox`, `AddRightGroupbox`
-- `AddButton` must always be:
-```lua
-AddButton("Text", { Callback = function() end })
-```
-- `AddKeybind.Default` must be `Enum.KeyCode.*`
-- Store keybind values as `Enum.KeyCode`
-- `AddToggle`, `AddSlider`, `AddDropdown`, `AddTextbox` use option tables
-- Do not invent unsupported fields unless the library explicitly supports them
-
----
 ```
