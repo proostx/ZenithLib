@@ -1159,7 +1159,7 @@ function ZenithClassic:CreateWindow(cfg)
 				return box
 			end
 
-						function groupApi:AddColorPicker(name, opt)
+									function groupApi:AddColorPicker(name, opt)
 				opt = opt or {}
 
 				local value = opt.Default or Color3.fromRGB(255, 255, 255)
@@ -1206,7 +1206,7 @@ function ZenithClassic:CreateWindow(cfg)
 
 				local pickerFrame = create("Frame", {
 					Position = UDim2.fromOffset(0, 20),
-					Size = UDim2.new(1, 0, 0, 104),
+					Size = UDim2.new(1, 0, 0, 122),
 					BackgroundColor3 = THEME.Control2,
 					Visible = false,
 					Parent = holder
@@ -1215,13 +1215,23 @@ function ZenithClassic:CreateWindow(cfg)
 				corner(pickerFrame, 1)
 				pad(pickerFrame, 6, 6, 6, 6)
 
-				local pickerLayout = create("UIListLayout", {
-					Padding = UDim.new(0, 4),
-					SortOrder = Enum.SortOrder.LayoutOrder,
+				local closeBtn = create("TextButton", {
+					AnchorPoint = Vector2.new(1, 0),
+					Position = UDim2.new(1, -2, 0, 0),
+					Size = UDim2.fromOffset(16, 16),
+					BackgroundColor3 = THEME.Control,
+					Text = "×",
+					TextColor3 = THEME.Text,
+					TextSize = 12,
+					Font = Enum.Font.Code,
+					AutoButtonColor = false,
 					Parent = pickerFrame
 				})
+				stroke(closeBtn, THEME.StrokeSoft, 1, 0)
+				corner(closeBtn, 1)
 
 				local colorMap = create("Frame", {
+					Position = UDim2.fromOffset(0, 18),
 					Size = UDim2.new(1, 0, 0, 56),
 					BackgroundColor3 = Color3.fromRGB(255, 0, 0),
 					BorderSizePixel = 0,
@@ -1261,15 +1271,16 @@ function ZenithClassic:CreateWindow(cfg)
 				local pickerKnob = create("Frame", {
 					AnchorPoint = Vector2.new(0.5, 0.5),
 					Position = UDim2.fromScale(1, 0),
-					Size = UDim2.fromOffset(6, 6),
+					Size = UDim2.fromOffset(8, 8),
 					BackgroundColor3 = Color3.new(1, 1, 1),
 					BorderSizePixel = 0,
 					Parent = colorMap
 				})
 				stroke(pickerKnob, Color3.fromRGB(0, 0, 0), 1, 0)
-				corner(pickerKnob, 6)
+				corner(pickerKnob, 8)
 
 				local hueBar = create("Frame", {
+					Position = UDim2.fromOffset(0, 82),
 					Size = UDim2.new(1, 0, 0, 10),
 					BackgroundColor3 = Color3.new(1, 1, 1),
 					BorderSizePixel = 0,
@@ -1296,7 +1307,7 @@ function ZenithClassic:CreateWindow(cfg)
 				local hueKnob = create("Frame", {
 					AnchorPoint = Vector2.new(0.5, 0.5),
 					Position = UDim2.fromScale(0, 0.5),
-					Size = UDim2.fromOffset(4, 12),
+					Size = UDim2.fromOffset(5, 12),
 					BackgroundColor3 = Color3.new(1, 1, 1),
 					BorderSizePixel = 0,
 					Parent = hueBar
@@ -1311,6 +1322,7 @@ function ZenithClassic:CreateWindow(cfg)
 				local function render(call)
 					local h, s, v = hsv[1], hsv[2], hsv[3]
 					local hueColor = Color3.fromHSV(h, 1, 1)
+
 					satGrad.Color = ColorSequence.new({
 						ColorSequenceKeypoint.new(0, Color3.new(1, 1, 1)),
 						ColorSequenceKeypoint.new(1, hueColor),
@@ -1328,16 +1340,17 @@ function ZenithClassic:CreateWindow(cfg)
 				end
 
 				local function setMapFromMouse(x, y)
-					local px = math.clamp((x - colorMap.AbsolutePosition.X) / colorMap.AbsoluteSize.X, 0, 1)
-					local py = math.clamp((y - colorMap.AbsolutePosition.Y) / colorMap.AbsoluteSize.Y, 0, 1)
-					hsv[2] = px
-					hsv[3] = 1 - py
+					local relX = math.clamp(x - colorMap.AbsolutePosition.X, 0, colorMap.AbsoluteSize.X)
+					local relY = math.clamp(y - colorMap.AbsolutePosition.Y, 0, colorMap.AbsoluteSize.Y)
+
+					hsv[2] = relX / colorMap.AbsoluteSize.X
+					hsv[3] = 1 - (relY / colorMap.AbsoluteSize.Y)
 					render(true)
 				end
 
 				local function setHueFromMouse(x)
-					local px = math.clamp((x - hueBar.AbsolutePosition.X) / hueBar.AbsoluteSize.X, 0, 1)
-					hsv[1] = px
+					local relX = math.clamp(x - hueBar.AbsolutePosition.X, 0, hueBar.AbsoluteSize.X)
+					hsv[1] = relX / hueBar.AbsoluteSize.X
 					render(true)
 				end
 
@@ -1379,6 +1392,11 @@ function ZenithClassic:CreateWindow(cfg)
 				preview.MouseButton1Click:Connect(function()
 					opened = not opened
 					pickerFrame.Visible = opened
+				end)
+
+				closeBtn.MouseButton1Click:Connect(function()
+					opened = false
+					pickerFrame.Visible = false
 				end)
 
 				local apiObj = {}
