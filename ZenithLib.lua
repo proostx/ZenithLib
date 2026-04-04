@@ -1159,262 +1159,276 @@ function ZenithClassic:CreateWindow(cfg)
 				return box
 			end
 
-									function groupApi:AddColorPicker(name, opt)
-				opt = opt or {}
+function groupApi:AddColorPicker(name, opt)
+    opt = opt or {}
 
-				local value = opt.Default or Color3.fromRGB(255, 255, 255)
-				local opened = false
+    local value = opt.Default or Color3.fromRGB(255, 255, 255)
+    local opened = false
 
-				local holder = create("Frame", {
-					Size = UDim2.new(1, 0, 0, 16),
-					AutomaticSize = Enum.AutomaticSize.Y,
-					BackgroundTransparency = 1,
-					Parent = body
-				})
+    local holder = create("Frame", {
+        Size = UDim2.new(1, 0, 0, 16),
+        AutomaticSize = Enum.AutomaticSize.Y,
+        BackgroundTransparency = 1,
+        Parent = body
+    })
 
-				create("TextLabel", {
-					BackgroundTransparency = 1,
-					Size = UDim2.new(1, -74, 1, 0),
-					Text = name,
-					TextColor3 = THEME.Text,
-					TextSize = 12,
-					Font = Enum.Font.Code,
-					TextXAlignment = Enum.TextXAlignment.Left,
-					Parent = holder
-				})
+    create("TextLabel", {
+        BackgroundTransparency = 1,
+        Size = UDim2.new(1, -74, 1, 0),
+        Text = name,
+        TextColor3 = THEME.Text,
+        TextSize = 12,
+        Font = Enum.Font.Code,
+        TextXAlignment = Enum.TextXAlignment.Left,
+        Parent = holder
+    })
 
-				local preview = create("TextButton", {
-					AnchorPoint = Vector2.new(1, 0.5),
-					Position = UDim2.new(1, 0, 0.5, 0),
-					Size = UDim2.fromOffset(70, 16),
-					BackgroundColor3 = THEME.Control2,
-					Text = "",
-					AutoButtonColor = false,
-					Parent = holder
-				})
-				stroke(preview, THEME.StrokeSoft, 1, 0)
-				corner(preview, 1)
+    local preview = create("TextButton", {
+        AnchorPoint = Vector2.new(1, 0.5),
+        Position = UDim2.new(1, 0, 0.5, 0),
+        Size = UDim2.fromOffset(70, 16),
+        BackgroundColor3 = THEME.Control2,
+        Text = "",
+        AutoButtonColor = false,
+        Parent = holder
+    })
+    stroke(preview, THEME.StrokeSoft, 1, 0)
+    corner(preview, 1)
 
-				local swatch = create("Frame", {
-					Position = UDim2.fromOffset(2, 2),
-					Size = UDim2.new(1, -4, 1, -4),
-					BackgroundColor3 = value,
-					BorderSizePixel = 0,
-					Parent = preview
-				})
-				corner(swatch, 1)
+    local swatch = create("Frame", {
+        Position = UDim2.fromOffset(2, 2),
+        Size = UDim2.new(1, -4, 1, -4),
+        BackgroundColor3 = value,
+        BorderSizePixel = 0,
+        Parent = preview
+    })
+    corner(swatch, 1)
 
-				local pickerFrame = create("Frame", {
-					Position = UDim2.fromOffset(0, 20),
-					Size = UDim2.new(1, 0, 0, 122),
-					BackgroundColor3 = THEME.Control2,
-					Visible = false,
-					Parent = holder
-				})
-				stroke(pickerFrame, THEME.StrokeSoft, 1, 0)
-				corner(pickerFrame, 1)
-				pad(pickerFrame, 6, 6, 6, 6)
+    local pickerFrame = create("Frame", {
+        Position = UDim2.fromOffset(0, 20),
+        Size = UDim2.new(1, 0, 0, 134),
+        BackgroundColor3 = THEME.Control2,
+        Visible = false,
+        Parent = holder
+    })
+    stroke(pickerFrame, THEME.StrokeSoft, 1, 0)
+    corner(pickerFrame, 2)
+    pad(pickerFrame, 6, 6, 6, 6)
 
-				local closeBtn = create("TextButton", {
-					AnchorPoint = Vector2.new(1, 0),
-					Position = UDim2.new(1, -2, 0, 0),
-					Size = UDim2.fromOffset(16, 16),
-					BackgroundColor3 = THEME.Control,
-					Text = "×",
-					TextColor3 = THEME.Text,
-					TextSize = 12,
-					Font = Enum.Font.Code,
-					AutoButtonColor = false,
-					Parent = pickerFrame
-				})
-				stroke(closeBtn, THEME.StrokeSoft, 1, 0)
-				corner(closeBtn, 1)
+    local colorMap = create("Frame", {
+        Size = UDim2.new(1, 0, 0, 70),
+        BackgroundColor3 = Color3.new(1, 1, 1),
+        BorderSizePixel = 0,
+        ClipsDescendants = false,
+        Parent = pickerFrame
+    })
+    stroke(colorMap, THEME.StrokeSoft, 1, 0)
+    corner(colorMap, 2)
 
-				local colorMap = create("Frame", {
-					Position = UDim2.fromOffset(0, 18),
-					Size = UDim2.new(1, 0, 0, 56),
-					BackgroundColor3 = Color3.fromRGB(255, 0, 0),
-					BorderSizePixel = 0,
-					ClipsDescendants = true,
-					Parent = pickerFrame
-				})
-				stroke(colorMap, THEME.StrokeSoft, 1, 0)
-				corner(colorMap, 1)
+    local satGrad = create("UIGradient", {
+        Color = ColorSequence.new({
+            ColorSequenceKeypoint.new(0, Color3.new(1, 1, 1)),
+            ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 0, 0)),
+        }),
+        Rotation = 0,
+        Parent = colorMap
+    })
 
-				local satGrad = create("UIGradient", {
-					Color = ColorSequence.new({
-						ColorSequenceKeypoint.new(0, Color3.new(1, 1, 1)),
-						ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 0, 0)),
-					}),
-					Rotation = 0,
-					Parent = colorMap
-				})
+    local valOverlay = create("Frame", {
+        Size = UDim2.new(1, 0, 1, 0),
+        BackgroundColor3 = Color3.new(0, 0, 0),
+        BorderSizePixel = 0,
+        Parent = colorMap
+    })
+    corner(valOverlay, 2)
+    create("UIGradient", {
+        Color = ColorSequence.new(Color3.new(1, 1, 1), Color3.new(1, 1, 1)),
+        Transparency = NumberSequence.new({
+            NumberSequenceKeypoint.new(0, 1),   -- top: прозрачный
+            NumberSequenceKeypoint.new(1, 0),   -- bottom: непрозрачный чёрный
+        }),
+        Rotation = 90,
+        Parent = valOverlay
+    })
 
-				local valOverlay = create("Frame", {
-					Size = UDim2.new(1, 0, 1, 0),
-					BackgroundColor3 = Color3.new(0, 0, 0),
-					BorderSizePixel = 0,
-					Parent = colorMap
-				})
-				corner(valOverlay, 1)
+    local pickerKnob = create("Frame", {
+        AnchorPoint = Vector2.new(0.5, 0.5),
+        Position = UDim2.fromScale(0, 0),
+        Size = UDim2.fromOffset(10, 10),
+        BackgroundColor3 = Color3.new(1, 1, 1),
+        BorderSizePixel = 0,
+        ZIndex = 5,
+        Parent = colorMap
+    })
+    stroke(pickerKnob, Color3.fromRGB(20, 20, 20), 1.5, 0)
+    corner(pickerKnob, 8)
 
-				create("UIGradient", {
-					Color = ColorSequence.new(Color3.new(1,1,1), Color3.new(1,1,1)),
-					Transparency = NumberSequence.new({
-						NumberSequenceKeypoint.new(0, 1),
-						NumberSequenceKeypoint.new(1, 0),
-					}),
-					Rotation = 90,
-					Parent = valOverlay
-				})
+    local hueBar = create("Frame", {
+        Position = UDim2.fromOffset(0, 78),
+        Size = UDim2.new(1, 0, 0, 12),
+        BackgroundColor3 = Color3.new(1, 1, 1),
+        BorderSizePixel = 0,
+        ClipsDescendants = true,
+        Parent = pickerFrame
+    })
+    stroke(hueBar, THEME.StrokeSoft, 1, 0)
+    corner(hueBar, 2)
 
-				local pickerKnob = create("Frame", {
-					AnchorPoint = Vector2.new(0.5, 0.5),
-					Position = UDim2.fromScale(1, 0),
-					Size = UDim2.fromOffset(8, 8),
-					BackgroundColor3 = Color3.new(1, 1, 1),
-					BorderSizePixel = 0,
-					Parent = colorMap
-				})
-				stroke(pickerKnob, Color3.fromRGB(0, 0, 0), 1, 0)
-				corner(pickerKnob, 8)
+    create("UIGradient", {
+        Color = ColorSequence.new({
+            ColorSequenceKeypoint.new(0.000, Color3.fromRGB(255, 0,   0)),   -- Red    (H=0)
+            ColorSequenceKeypoint.new(0.167, Color3.fromRGB(255, 255, 0)),   -- Yellow (H=1/6)
+            ColorSequenceKeypoint.new(0.333, Color3.fromRGB(0,   255, 0)),   -- Green  (H=2/6)
+            ColorSequenceKeypoint.new(0.500, Color3.fromRGB(0,   255, 255)), -- Cyan   (H=3/6)
+            ColorSequenceKeypoint.new(0.667, Color3.fromRGB(0,   0,   255)), -- Blue   (H=4/6)
+            ColorSequenceKeypoint.new(0.833, Color3.fromRGB(255, 0,   255)), -- Magenta(H=5/6)
+            ColorSequenceKeypoint.new(1.000, Color3.fromRGB(255, 0,   0)),   -- Red    (H=1)
+        }),
+        Rotation = 0,
+        Parent = hueBar
+    })
 
-				local hueBar = create("Frame", {
-					Position = UDim2.fromOffset(0, 82),
-					Size = UDim2.new(1, 0, 0, 10),
-					BackgroundColor3 = Color3.new(1, 1, 1),
-					BorderSizePixel = 0,
-					ClipsDescendants = true,
-					Parent = pickerFrame
-				})
-				stroke(hueBar, THEME.StrokeSoft, 1, 0)
-				corner(hueBar, 1)
+    local hueKnob = create("Frame", {
+        AnchorPoint = Vector2.new(0.5, 0.5),
+        Position = UDim2.fromScale(0, 0.5),
+        Size = UDim2.fromOffset(5, 14),
+        BackgroundColor3 = Color3.new(1, 1, 1),
+        BorderSizePixel = 0,
+        Parent = hueBar
+    })
+    stroke(hueKnob, Color3.fromRGB(20, 20, 20), 1, 0)
+    corner(hueKnob, 2)
 
-				create("UIGradient", {
-					Color = ColorSequence.new({
-						ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 0, 0)),
-						ColorSequenceKeypoint.new(0.16, Color3.fromRGB(255, 0, 255)),
-						ColorSequenceKeypoint.new(0.33, Color3.fromRGB(0, 0, 255)),
-						ColorSequenceKeypoint.new(0.50, Color3.fromRGB(0, 255, 255)),
-						ColorSequenceKeypoint.new(0.66, Color3.fromRGB(0, 255, 0)),
-						ColorSequenceKeypoint.new(0.83, Color3.fromRGB(255, 255, 0)),
-						ColorSequenceKeypoint.new(1.00, Color3.fromRGB(255, 0, 0)),
-					}),
-					Rotation = 0,
-					Parent = hueBar
-				})
+    local acceptBtn = create("TextButton", {
+        Position = UDim2.fromOffset(0, 98),
+        Size = UDim2.new(1, 0, 0, 24),
+        BackgroundColor3 = THEME.Control,
+        Text = "Применить",
+        TextColor3 = THEME.Accent,
+        TextSize = 12,
+        Font = Enum.Font.Code,
+        AutoButtonColor = false,
+        Parent = pickerFrame
+    })
+    stroke(acceptBtn, THEME.Accent, 1, 0.5)
+    corner(acceptBtn, 2)
 
-				local hueKnob = create("Frame", {
-					AnchorPoint = Vector2.new(0.5, 0.5),
-					Position = UDim2.fromScale(0, 0.5),
-					Size = UDim2.fromOffset(5, 12),
-					BackgroundColor3 = Color3.new(1, 1, 1),
-					BorderSizePixel = 0,
-					Parent = hueBar
-				})
-				stroke(hueKnob, Color3.fromRGB(0, 0, 0), 1, 0)
-				corner(hueKnob, 1)
+    acceptBtn.MouseEnter:Connect(function()
+        tween(acceptBtn, 0.1, {BackgroundColor3 = Color3.fromRGB(32, 48, 44)})
+    end)
+    acceptBtn.MouseLeave:Connect(function()
+        tween(acceptBtn, 0.1, {BackgroundColor3 = THEME.Control})
+    end)
+    acceptBtn.MouseButton1Click:Connect(function()
+        tween(acceptBtn, 0.06, {BackgroundColor3 = Color3.fromRGB(45, 65, 60)})
+        task.delay(0.1, function()
+            if acceptBtn and acceptBtn.Parent then
+                tween(acceptBtn, 0.1, {BackgroundColor3 = THEME.Control})
+            end
+        end)
+        opened = false
+        pickerFrame.Visible = false
+    end)
 
-				local hsv = {Color3.toHSV(value)}
-				local draggingMap = false
-				local draggingHue = false
+    local hsv = {Color3.toHSV(value)}
+    local draggingMap = false
+    local draggingHue = false
 
-				local function render(call)
-					local h, s, v = hsv[1], hsv[2], hsv[3]
-					local hueColor = Color3.fromHSV(h, 1, 1)
+    local function render(call)
+        local h, s, v = hsv[1], hsv[2], hsv[3]
+        local hueColor = Color3.fromHSV(h, 1, 1)
 
-					satGrad.Color = ColorSequence.new({
-						ColorSequenceKeypoint.new(0, Color3.new(1, 1, 1)),
-						ColorSequenceKeypoint.new(1, hueColor),
-					})
+        satGrad.Color = ColorSequence.new({
+            ColorSequenceKeypoint.new(0, Color3.new(1, 1, 1)),
+            ColorSequenceKeypoint.new(1, hueColor),
+        })
 
-					local finalColor = Color3.fromHSV(h, s, v)
-					swatch.BackgroundColor3 = finalColor
+        local finalColor = Color3.fromHSV(h, s, v)
+        swatch.BackgroundColor3 = finalColor
+        pickerKnob.Position = UDim2.fromScale(s, 1 - v)
+        hueKnob.Position = UDim2.fromScale(h, 0.5)
 
-					pickerKnob.Position = UDim2.fromScale(s, 1 - v)
-					hueKnob.Position = UDim2.fromScale(h, 0.5)
+        if opt.Callback and call ~= false then
+            opt.Callback(finalColor)
+        end
+    end
 
-					if opt.Callback and call ~= false then
-						opt.Callback(finalColor)
-					end
-				end
+    local function setMapFromMouse(x, y)
+        local sizeX = math.max(colorMap.AbsoluteSize.X, 1)
+        local sizeY = math.max(colorMap.AbsoluteSize.Y, 1)
+        hsv[2] = math.clamp((x - colorMap.AbsolutePosition.X) / sizeX, 0, 1)
+        hsv[3] = 1 - math.clamp((y - colorMap.AbsolutePosition.Y) / sizeY, 0, 1)
+        render(true)
+    end
 
-				local function setMapFromMouse(x, y)
-					local relX = math.clamp(x - colorMap.AbsolutePosition.X, 0, colorMap.AbsoluteSize.X)
-					local relY = math.clamp(y - colorMap.AbsolutePosition.Y, 0, colorMap.AbsoluteSize.Y)
+    local function setHueFromMouse(x)
+        local sizeX = math.max(hueBar.AbsoluteSize.X, 1)
+        hsv[1] = math.clamp((x - hueBar.AbsolutePosition.X) / sizeX, 0, 1)
+        render(true)
+    end
 
-					hsv[2] = relX / colorMap.AbsoluteSize.X
-					hsv[3] = 1 - (relY / colorMap.AbsoluteSize.Y)
-					render(true)
-				end
+    colorMap.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            draggingMap = true
+            local pos = UserInputService:GetMouseLocation()
+            setMapFromMouse(pos.X, pos.Y)
+        end
+    end)
 
-				local function setHueFromMouse(x)
-					local relX = math.clamp(x - hueBar.AbsolutePosition.X, 0, hueBar.AbsoluteSize.X)
-					hsv[1] = relX / hueBar.AbsoluteSize.X
-					render(true)
-				end
+    hueBar.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            draggingHue = true
+            local pos = UserInputService:GetMouseLocation()
+            setHueFromMouse(pos.X)
+        end
+    end)
 
-				colorMap.InputBegan:Connect(function(input)
-					if input.UserInputType == Enum.UserInputType.MouseButton1 then
-						draggingMap = true
-						local pos = UserInputService:GetMouseLocation()
-						setMapFromMouse(pos.X, pos.Y)
-					end
-				end)
+    local mapConn = UserInputService.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement then
+            local pos = UserInputService:GetMouseLocation()
+            if draggingMap then
+                setMapFromMouse(pos.X, pos.Y)
+            elseif draggingHue then
+                setHueFromMouse(pos.X)
+            end
+        end
+    end)
 
-				hueBar.InputBegan:Connect(function(input)
-					if input.UserInputType == Enum.UserInputType.MouseButton1 then
-						draggingHue = true
-						local pos = UserInputService:GetMouseLocation()
-						setHueFromMouse(pos.X)
-					end
-				end)
+    local endConn = UserInputService.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            draggingMap = false
+            draggingHue = false
+        end
+    end)
 
-				UserInputService.InputChanged:Connect(function(input)
-					if input.UserInputType == Enum.UserInputType.MouseMovement then
-						local pos = UserInputService:GetMouseLocation()
-						if draggingMap then
-							setMapFromMouse(pos.X, pos.Y)
-						end
-						if draggingHue then
-							setHueFromMouse(pos.X)
-						end
-					end
-				end)
+    gui.AncestryChanged:Connect(function()
+        if not gui.Parent then
+            pcall(function() mapConn:Disconnect() end)
+            pcall(function() endConn:Disconnect() end)
+        end
+    end)
 
-				UserInputService.InputEnded:Connect(function(input)
-					if input.UserInputType == Enum.UserInputType.MouseButton1 then
-						draggingMap = false
-						draggingHue = false
-					end
-				end)
+    preview.MouseButton1Click:Connect(function()
+        opened = not opened
+        pickerFrame.Visible = opened
+    end)
 
-				preview.MouseButton1Click:Connect(function()
-					opened = not opened
-					pickerFrame.Visible = opened
-				end)
+    local apiObj = {}
 
-				closeBtn.MouseButton1Click:Connect(function()
-					opened = false
-					pickerFrame.Visible = false
-				end)
+    function apiObj:Set(color)
+        if typeof(color) == "Color3" then
+            hsv = {Color3.toHSV(color)}
+            render(true)
+        end
+    end
 
-				local apiObj = {}
+    function apiObj:Get()
+        return Color3.fromHSV(hsv[1], hsv[2], hsv[3])
+    end
 
-				function apiObj:Set(color)
-					if typeof(color) == "Color3" then
-						hsv = {Color3.toHSV(color)}
-						render(true)
-					end
-				end
-
-				function apiObj:Get()
-					return Color3.fromHSV(hsv[1], hsv[2], hsv[3])
-				end
-
-				render(false)
-				return apiObj
-			end
+    render(false)
+    return apiObj
+end
 			
 			return groupApi
 		end
