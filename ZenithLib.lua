@@ -768,7 +768,7 @@ function ZenithClassic:CreateWindow(cfg)
 				return apiObj
 			end
 
-			function groupApi:AddDropdown(name, opt)
+						function groupApi:AddDropdown(name, opt)
 				opt = opt or {}
 				local items = opt.Items or {"Option 1", "Option 2"}
 				local value = opt.Default or items[1]
@@ -845,39 +845,49 @@ function ZenithClassic:CreateWindow(cfg)
 					Parent = listFrame
 				})
 
-				for _, item in ipairs(items) do
-					local option = create("TextButton", {
-						Size = UDim2.new(1, 0, 0, 16),
-						BackgroundColor3 = THEME.Control,
-						Text = tostring(item),
-						TextColor3 = THEME.Text,
-						TextSize = 12,
-						Font = Enum.Font.Code,
-						AutoButtonColor = false,
-						Parent = listFrame
-					})
-					stroke(option, THEME.StrokeSoft, 1, 0)
-					corner(option, 1)
-
-					option.MouseEnter:Connect(function()
-						tween(option, 0.1, {BackgroundColor3 = Color3.fromRGB(44, 44, 44)})
-					end)
-
-					option.MouseLeave:Connect(function()
-						tween(option, 0.1, {BackgroundColor3 = THEME.Control})
-					end)
-
-					option.MouseButton1Click:Connect(function()
-						value = item
-						valueText.Text = tostring(value)
-						open = false
-						listFrame.Visible = false
-						arrow.Text = "▼"
-						if opt.Callback then
-							opt.Callback(value)
+				local function buildItems()
+					for _, child in ipairs(listFrame:GetChildren()) do
+						if child:IsA("TextButton") then
+							child:Destroy()
 						end
-					end)
+					end
+
+					for _, item in ipairs(items) do
+						local option = create("TextButton", {
+							Size = UDim2.new(1, 0, 0, 16),
+							BackgroundColor3 = THEME.Control,
+							Text = tostring(item),
+							TextColor3 = THEME.Text,
+							TextSize = 12,
+							Font = Enum.Font.Code,
+							AutoButtonColor = false,
+							Parent = listFrame
+						})
+						stroke(option, THEME.StrokeSoft, 1, 0)
+						corner(option, 1)
+
+						option.MouseEnter:Connect(function()
+							tween(option, 0.1, {BackgroundColor3 = Color3.fromRGB(44, 44, 44)})
+						end)
+
+						option.MouseLeave:Connect(function()
+							tween(option, 0.1, {BackgroundColor3 = THEME.Control})
+						end)
+
+						option.MouseButton1Click:Connect(function()
+							value = item
+							valueText.Text = tostring(value)
+							open = false
+							listFrame.Visible = false
+							arrow.Text = "▼"
+							if opt.Callback then
+								opt.Callback(value)
+							end
+						end)
+					end
 				end
+
+				buildItems()
 
 				button.MouseButton1Click:Connect(function()
 					open = not open
@@ -897,6 +907,26 @@ function ZenithClassic:CreateWindow(cfg)
 
 				function apiObj:Get()
 					return value
+				end
+
+				-- Новый нативный метод Refresh
+				function apiObj:Refresh(newItems)
+					items = newItems or {}
+					buildItems()
+
+					-- Проверяем, существует ли текущий выбранный элемент в новом списке
+					local found = false
+					for _, item in ipairs(items) do
+						if item == value then
+							found = true
+							break
+						end
+					end
+
+					-- Если элемента больше нет, переключаемся на первый доступный
+					if not found then
+						apiObj:Set(items[1] or "None")
+					end
 				end
 
 				return apiObj
